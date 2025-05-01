@@ -1,5 +1,4 @@
 "use client";
-import { useEffect } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useToggleTree } from "@/app/ui/neovim/Tree"
 import { Suspense } from 'react'

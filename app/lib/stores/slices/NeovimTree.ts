@@ -7,7 +7,7 @@ export type NeovimTree = {
   neovimTreeLink: number;
 };
 
-type StateNeovimTree = "isNeovimTree";
+const StateIsNeovimTree = "isNeovimTree";
 
 export type NeovimTreeActions = {
   setIsNeovimTree: (isOpen: boolean) => void;
@@ -23,12 +23,12 @@ export const defaultState: NeovimTree = {
 
 export const createNeovimTreeSlice =
   (initial: Partial<StoreState>): StateCreator<Store, [], [], NeovimTreeSlice> =>
-    (set, get) => {
+    (set) => {
       return {
         ...initial,
         isNeovimTree: initial.isNeovimTree ?? defaultState.isNeovimTree,
         neovimTreeLink: initial.neovimTreeLink ?? defaultState.neovimTreeLink,
-        setIsNeovimTree: (isOpen) => set({ ["isNeovimTree"]: isOpen }),
+        setIsNeovimTree: (isOpen) => set({ [StateIsNeovimTree]: isOpen }),
         setNeovimTreeLink: (index) => {
           set({ ["neovimTreeLink"]: index })
         }
