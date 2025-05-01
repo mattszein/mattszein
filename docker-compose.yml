@@ -5,9 +5,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-
     volumes:
-      - .:/mattszeinweb
+      - .:/mattszein
     restart: always
     ports:
       - 3000:3000
