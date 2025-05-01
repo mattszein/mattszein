@@ -19,7 +19,7 @@ export const createAppStore = (initState: Partial<StoreState> = defaultState) =>
       }),
       {
         name: "app",
-        partialize: (state) => ({
+        partialize: () => ({
         }),
       },
     ),

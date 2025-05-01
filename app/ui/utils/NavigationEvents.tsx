@@ -19,7 +19,7 @@ function Navigation() {
       return link.href === pathname;
     })
     setNeovimTreeLink(navTreeIndex)
-  }, [pathname, searchParams]);
+  }, [pathname, searchParams]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return <></>
 }
