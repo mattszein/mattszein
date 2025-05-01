@@ -17,8 +17,8 @@ export const useToggleTree = () => {
     setIsTree(true);
   };
 
-  const toggle = () => {
-    isTree ? closeTree() : openTree();
-  };
+  const toggle = () => isTree ? closeTree() : openTree();
+  ;
+
   return [toggle]
 };
