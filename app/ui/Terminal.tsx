@@ -7,11 +7,13 @@ export default function Terminal({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="flex flex-col h-screen bg-zinc-800 text-white">
+    <div className="flex flex-col flex-1 bg-zinc-800 text-white overflow-hidden">
       <Header />
       <main className="flex flex-1 overflow-hidden">
         <Tree />
-        <section className="flex-1 p-4 text-sm">{children}</section>
+        <section className="flex-1 p-4 text-sm overflow-auto no-scrollbar">
+          {children}
+        </section>
       </main>
     </div>
   );

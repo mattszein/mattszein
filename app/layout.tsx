@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import "./globals.css";
+import './globals.css'
 import { AppStoreProvider } from "@/app/ui/stores/AppStoreProvider";
 import Terminal from "./ui/Terminal";
 import NavigationEvents from "@/app/ui/utils/NavigationEvents"
 import Shortcuts from "./ui/utils/Shortcuts";
+import WindowOS from "./ui/OS/WindowOS";
+import BarOS from "./ui/OS/BarOS";
 
 const cousineFont = localFont({
   src: "./fonts/Cousine-Regular.woff",
@@ -28,7 +30,10 @@ export default function RootLayout({
         <body className={`${cousineFont.variable} antialiased`}>
           <NavigationEvents />
           <Shortcuts />
-          <Terminal>{children}</Terminal>
+          <WindowOS>
+            <BarOS />
+            <Terminal>{children}</Terminal>
+          </WindowOS>
         </body>
       </AppStoreProvider>
     </html>
