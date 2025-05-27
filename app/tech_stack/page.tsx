@@ -1,41 +1,54 @@
 export default function TechStack() {
   return (
     <div className="text-lg">
-      <p className="text-white">
-        With over a decade of experience with Linux, my choice of operating system reflects a deep commitment to flexibility, power, and open-source principles. My journey through various distributions, primarily Debian-based, has culminated in my current use of Pop!_OS.
+      <h1 className="font-bold">
+        My Tech Stack
+      </h1>
+      <p className="pt-4">
+        {`After over a decade with Linux, I've settled into a setup that just works. I've tried various distributions over the years, mostly Debian-based, but Pop!_OS has become my daily driver - it strikes the perfect balance between stability and staying out of my way.`}
       </p>
-      <p className="text-white pt-4">
-        My workstation is a Slimbook Titan Laptop, a powerhouse designed to tackle demanding tasks. The specs are as follows:
+      <h1 className="pt-4 font-bold">
+        Hardware Setup
+      </h1>
+      <p className=" pt-4">
+        {`My personal machine is a Slimbook Titan laptop that handles everything I throw at it:`}
       </p>
-      <p className="text-white pt-4">
-        -CPU: AMD Ryzen 9 5900HX.
+      <p className=" pt-4">
+        {`CPU: AMD Ryzen 9 5900HX`}
       </p>
-      <p className="text-white">
-        -SCREEN: 15.6″ QHD IPS display with a refresh rate of 165Hz.
+      <p>
+        {`Display: 15.6″ QHD IPS at 165Hz`}
       </p>
-      <p className="text-white">
-        -KEYBOARD: An opto-mechanical marvel with RGB colored keys.
+      <p>
+        {`Memory: 64GB DDR4`}
       </p>
-      <p className="text-white">
-        -MEMORY: 64GB DDR4.
+      <p>
+        {`Storage: Dual 1TB M.2 SSDs (one for Windows when needed, one for Pop!_OS)`}
       </p>
-      <p className="text-white">
-        -STORAGE: Dual 1TB M.2 SSDs, with one hosting Windows and the other Pop!_OS, providing ample space and flexibility for my projects and applications.
+      <p>
+        {`Graphics: NVIDIA RTX 3070Ti`}
       </p>
-      <p className="text-white">
-        -GRAPHICS: NVIDIA RTX 3070Ti.
+      <p>
+        {`Keyboard: Opto-mechanical with RGB keys`}
       </p>
-      <p className="text-white">
-        -PORTS: USB 3.2, Type-C with DisplayPort output, HDMI 2.1, an SD card reader, and more.
+      <p className=" pt-4">
+        {`I run a tri-monitor setup because screen real estate matters. The laptop screen handles browsing and music, the main monitor is for coding, and the third keeps an eye on servers and logs. For ergonomics, I use an Ergodox EZ with Cherry MX switches and an ergonomic mouse - after years of coding, your wrists will thank you.`}
       </p>
-      <p className="text-white pt-4">
-        I integrate two additional screens, creating a tri-monitor workspace. This configuration allows for an optimized division of tasks: the laptop screen dedicated to browsing and music, the central monitor for coding, and the third for monitoring servers and logs.
+      <h1 className="font-bold pt-4">
+        Software
+      </h1>
+
+      <p className=" pt-4">
+        {`For development, I live in neovim and kitty terminal. Neovim gives me the speed and customization I need, while kitty's GPU acceleration keeps everything smooth. The combination lets me stay in the flow without the interface getting in the way.`}
       </p>
-      <p className="text-white pt-4">
-        Ergonomics play a crucial role in my setup, with an Ergodox EZ keyboard equipped with Cherry MX keys and an ergonomic mouse.
-      </p>
-      <p className="text-white pt-4">
-        For software development, I choose neovim as my editor, and kitty as a GPU based terminal emulator.
+
+      <h1 className="font-bold pt-4">
+        Why This Setup Works
+      </h1>
+
+      <p className=" pt-4">
+        {`This isn't just about having powerful hardware - it's about creating an environment where I can focus on solving problems instead of fighting with tools. Every choice, from the Linux distro to the keyboard layout, is optimized for long coding sessions and the kind of deep work that actually moves projects forward.`}
+
       </p>
     </div>
   )
