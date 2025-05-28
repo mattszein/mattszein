@@ -1,4 +1,6 @@
 import Battery from "@/app/ui/icons/OS/Battery"
+import DateTime from "@/app/ui/OS/DateTime"
+
 const BarOS = () => {
   const time = new Date();
   return <div className="flex bg-zinc-900 text-sm font-bold">
@@ -9,18 +11,7 @@ const BarOS = () => {
       </ul>
     </div>
     <div className="flex basis-1/3 justify-center">
-      <p className="flex gap-2 hover:bg-zinc-700 hover:rounded-2xl py-1 px-3 m-1 cursor-default">
-        <span>{new Intl.DateTimeFormat("en-US", {
-          month: "long",
-          day: "numeric",
-        }).format(time)}
-        </span>
-        <span>{new Intl.DateTimeFormat("en-US", {
-          hour: "numeric",
-          minute: "numeric"
-        }).format(time)}
-        </span>
-      </p>
+      <DateTime />
     </div>
     <div className="flex basis-1/3 justify-end">
       <ul className="flex gap-2 hover:bg-zinc-700 hover:rounded-2xl py-1 px-3 m-1 cursor-default">
