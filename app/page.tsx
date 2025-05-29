@@ -30,7 +30,7 @@ export default function Home() {
         {`🎮 Navigate like a developer`}
       </p>
       <p className="pt-4 ">
-        {`This site works differently - instead of clicking with your mouse, you use keyboard keys to move around. It's inspired by how programmers navigate code efficiently. Look for the cursor (that blinking line) on the first letter 'H' - that shows where you are.`}
+        {`This site works differently - instead of clicking with your mouse, you use keyboard keys to move around. It's inspired by how some programmers navigate code efficiently. Look for the cursor (that blinking line) on the first letter 'H' - that shows where you are.`}
       </p>
       <p className="pt-4 font-bold">
         {`Movement Keys (like arrow keys, but faster):`}
@@ -40,17 +40,13 @@ export default function Home() {
       <p>{`k → Move up (same as up arrow)`}</p>
       <p>{`l → Move right (same as right arrow)`}</p>
 
-      <p className="text-white pt-4 font-bold">
-        {`Shortcuts:`}
+      <p className="pt-4 font-bold">
+        {`Action Keys:`}
       </p>
-      <p className="text-white pt-4">
-        {`Space + e: Open menu`}
+      <p className="pt-4">
+        {`Space + e → Open menu`}
       </p>
-      <p className="text-white">
-        {`Enter: open file`}
-      </p>
-
-
+      <p>{`Enter → Open/Select (like clicking)`}</p>
     </div>
   );
 }
