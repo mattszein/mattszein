@@ -12,10 +12,11 @@ export type LinkTree = Array<{
 
 export const LinkList = [
   { href: "", title: "/me", icon: FolderIcon, level: 0 },
-  { href: "/about", title: "about.tsx", icon: ReactIcon, level: 1 },
-  { href: "/nutrition", title: "nutrition.tsx", icon: ReactIcon, level: 1 },
-  { href: "/tech_stack", title: "tech_stack.tsx", icon: ReactIcon, level: 1 },
-  { href: "/training", title: "training.tsx", icon: ReactIcon, level: 1 },
+  { href: "/about", title: "About.tsx", icon: ReactIcon, level: 1 },
+  { href: "/coding", title: "Coding.tsx", icon: ReactIcon, level: 1 },
+  { href: "/nutrition", title: "Nutrition.tsx", icon: ReactIcon, level: 1 },
+  { href: "/tech_stack", title: "TechStack.tsx", icon: ReactIcon, level: 1 },
+  { href: "/training", title: "Training.tsx", icon: ReactIcon, level: 1 },
   { href: "/gitignore", title: ".gitignore", icon: IgnoreIcon, level: 0 },
   { href: "/", title: "Readme.md", icon: MdIcon, level: 0 },
 ];
