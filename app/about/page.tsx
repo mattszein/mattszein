@@ -4,7 +4,7 @@ export default function About() {
     <div className="text-lg text-white">
       <p><strong>{`My roots🏠`}</strong></p>
       <br />
-      <p><span id="cursor-text" className="animate-cursor"></span>
+      <p>
         {`I'm someone who grew up right at the height of the technological boom 💥. Born in the '90s, I experienced the pre-internet world: playing with physical toys, listening to the radio, watching VHS movies. Then came the era of ICQ and mIRC, with those painfully slow modems that made the phone completely unusable... The golden years of Yahoo!!! Without forgetting the mobile revolution from StarTac to the indestructible Nokia 1100.`}
       </p>
       <br />

@@ -6,11 +6,11 @@ export default function Coding() {
     <div className="text-lg text-white">
       <p><strong>{`My Journey`}</strong></p>
       <br />
-      <p>{`15+ years of building software, I've worked from scrappy startups to more established companies, solo projects to leading technical teams. And I usually still get excited when I encounter a problem I haven't solved before. Challenges keep me sharp and improve my focus. There's something satisfying about that moment when you finally see the (elegant?) solution to something that seemed impossible an hour ago.`}</p>
-      <p>{`Something I've learned is that one of the good parts of working in a tech company isn't just writing code, it's watching other developers level up. I've mentored 7+ developers over the years, and honestly, seeing a junior dev grasp a complex concept and then run with it is similarly satisfying as any own technical achievement. But let's be real, not everything is nice and easy: sometimes a developer can't follow you on something that seems simple, and it feels heavy when you need to solve your own task. Or you're stuck on a bug for hours and the only clue you get is "Cannot read properties of undefined" with absolutely no useful stack trace (react detected). But in the end, it all has its reward.`}</p>
+      <p>{`15+ years of building software, I've worked from startups to more established companies, solo projects to leading technical teams. And I usually (well, sometimes) still get excited when I encounter a problem I haven't solved before. Challenges keep me sharp and improve my focus. There's something satisfying about that moment when you finally see the (elegant?) solution to something that seemed impossible hours ago.`}</p>
+      <p>{`Something I've learned is that one of the good parts of working in tech isn't just writing code, it's watching other developers level up. I've mentored 7+ developers over the years, and honestly, seeing a junior dev grasp a complex concept and then run with it is similarly satisfying as any own technical achievement. But let's be real, not everything is nice and easy: sometimes a developer can't follow you on something that seems simple, and it feels heavy when you need to solve your own task. Or you're stuck on a bug for hours and the only clue you get is "Cannot read properties of undefined" with absolutely no useful stack trace (don't use nextjs lol). But in the end, it all has its reward.`}</p>
       <p>{`I've realized how crucial clear communication is. Code is communication, documentation is communication, even a simple Slack message matters. Using the right words at the right time directly impacts results, whether someone is explaining a concept to a developer or discussing architecture with stakeholders, clarity saves time and prevents misunderstandings.`}</p>
       <br />
-      <p>{`Currently, I'm studying AI from the basics: its history, the fundamentals, the math behind it, different algorithms and their applications. Plus some Rust or whatever else seems interesting.`}</p>
+      <p>{`Currently, I'm studying AI from the basics: its history, the fundamentals, the math behind it (why??? why did I get into this), different algorithms and their applications. Plus some Rust or whatever else seems interesting.`}</p>
       <br />
       <p>{`🚀 Tech Lead at Hit Gaming`} <em>{`(Feb 2024 - Apr 2025)`}</em></p>
       <p>
@@ -27,14 +27,14 @@ export default function Coding() {
 
       <p>{`👥 Senior Software Engineer at Talent Hack`} <em>{`(Sep 2021 - Feb 2022)`}</em></p>
       <p>
-        {`Worked in a 5-person team to improve a fitness application. Mentored two frontend developer, added internal documentation system to improve team processes. Dockerized applications to improve development workflow`}</p>
+        {`Worked in a specific 5-person team to improve a fitness application. Mentored two frontend developer, added internal documentation system to improve team processes. Dockerized applications to improve development workflow`}</p>
       <p><em>{`Technologies: Ruby on Rails, React, Heroku, Docker`}</em></p>
       <br />
 
       <p>{`🏗️ Principal Software Engineer at Revelacion`} <em>{`(Aug 2020 - Feb 2021)`}</em>
       </p>
       <p>
-        {`End-to-end responsibility for an automotive inspection app - from system design to AWS deployment. Built a microservice using FastAPI to serve a TensorFlow model for image recognition, working closely with an AI scientist to develop the model and integrate it into our backend. The technical challenge was interesting, but seeing the app actually help people inspect vehicles made it worthwhile.`}</p>
+        {`End-to-end responsibility for an automotive insurance inspection app, working from the foundation to set up the roots of the entire system. Built the core architecture and a microservice using FastAPI to serve a TensorFlow model, working closely with an AI scientist to develop the model and integrate it into our backend.`}</p>
 
       <p><em>{`Technologies: Node.js, Next.js, React, MongoDB, Express, Docker, FastAPI, Python, AWS`}</em></p>
       <br />
