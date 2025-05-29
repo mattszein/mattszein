@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <div className="text-lg text-white">
-      <p>{`Hey, I'm Matt and welcome to my digital universe!`}</p>
+      <p className="text-white"><span id="cursor-text" className=" animate-cursor">{`H`}</span>{`ey, I'm Matt and welcome to my digital universe!`}</p>
       <br />
       <p>{``}</p>
       <p>
