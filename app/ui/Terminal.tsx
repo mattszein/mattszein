@@ -11,7 +11,7 @@ export default function Terminal({
       <Header />
       <main className="flex flex-1 overflow-hidden snap-align-none">
         <Tree />
-        <section className="flex-1 p-4 text-sm overflow-auto no-scrollbar snap-align-none">
+        <section id="terminal-content" className="flex-1 p-4 overflow-auto no-scrollbar snap-align-none text-lg text-white">
           {children}
         </section>
       </main>

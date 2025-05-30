@@ -5,6 +5,7 @@ import { useStore } from "@/app/ui/stores/AppStoreProvider";
 import { useShallow } from "zustand/react/shallow";
 import { LinkList } from "@/app/ui/link_list";
 import { Suspense } from 'react'
+import { wrapFirstLetter } from "./Cursor";
 
 function Navigation() {
   const pathname = usePathname();
@@ -19,6 +20,9 @@ function Navigation() {
       return link.href === pathname;
     })
     setNeovimTreeLink(navTreeIndex)
+
+    console.log("this is executed")
+    wrapFirstLetter();
   }, [pathname, searchParams]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return <></>
