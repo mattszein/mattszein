@@ -15,6 +15,16 @@ interface NavigationResult {
   targetTextNode?: Text;
 }
 
+interface CursorContext {
+  cursorSpan: HTMLSpanElement;
+  prevSibling: Node | null;
+  nextSibling: Node | null;
+  cursorChar: string;
+  currentPosition: number;
+  mergedText: string;
+  totalLength: number;
+}
+
 export const getContentSection = () => document.getElementById(NVIM_CONTENT)
 
 export const getCursorElement = (): HTMLSpanElement | null =>
@@ -45,6 +55,93 @@ const createTextWalker = (rootElement: HTMLElement): TreeWalker => {
       }
     }
   );
+};
+
+// Utility Functions - Extracted to reduce DRY
+
+// Get complete cursor context (position, siblings, merged text)
+const getCursorContext = (): CursorContext | null => {
+  const cursorSpan = getCursorElement();
+  if (!cursorSpan) return null;
+
+  const prevSibling = cursorSpan.previousSibling;
+  const nextSibling = cursorSpan.nextSibling;
+  const cursorChar = cursorSpan.textContent || '';
+
+  // Calculate current position in merged text
+  let currentPosition = 0;
+  if (prevSibling && prevSibling.nodeType === Node.TEXT_NODE) {
+    currentPosition += (prevSibling.textContent?.length || 0);
+  }
+
+  // Build merged text for current parent
+  let mergedText = '';
+  if (prevSibling && prevSibling.nodeType === Node.TEXT_NODE) {
+    mergedText += prevSibling.textContent || '';
+  }
+  mergedText += cursorChar;
+  if (nextSibling && nextSibling.nodeType === Node.TEXT_NODE) {
+    mergedText += nextSibling.textContent || '';
+  }
+
+  const totalLength = mergedText.length;
+
+  return {
+    cursorSpan,
+    prevSibling,
+    nextSibling,
+    cursorChar,
+    currentPosition,
+    mergedText,
+    totalLength
+  };
+};
+
+// Generic cross-tag navigation
+const findCrossTagNode = (direction: 'forward' | 'backward', cursorSpan: HTMLSpanElement): Text | null => {
+  const contentElement = getContentSection();
+  if (!contentElement) return null;
+
+  const walker = createTextWalker(contentElement);
+  walker.currentNode = cursorSpan;
+
+  // Get next/previous node based on direction
+  let targetNode = direction === 'forward'
+    ? walker.nextNode() as Text | null
+    : walker.previousNode() as Text | null;
+
+  // Skip nodes in same parent
+  if (targetNode?.parentNode === cursorSpan.parentNode) {
+    targetNode = direction === 'forward'
+      ? walker.nextNode() as Text | null
+      : walker.previousNode() as Text | null;
+  }
+
+  // Iterate until we find a node with actual content
+  while (targetNode) {
+    if (targetNode.textContent && targetNode.textContent.trim().length > 0) {
+      return targetNode;
+    }
+    targetNode = direction === 'forward'
+      ? walker.nextNode() as Text | null
+      : walker.previousNode() as Text | null;
+  }
+
+  return null;
+};
+
+// Calculate target offset for cross-tag forward movement (skip whitespace)
+const getForwardTargetOffset = (text: string): number => {
+  let targetOffset = 0;
+  // Skip whitespace at the beginning
+  while (targetOffset < text.length && isWhitespace(text[targetOffset])) {
+    targetOffset++;
+  }
+  // Make sure we found a valid character
+  if (targetOffset >= text.length) {
+    targetOffset = text.length - 1;
+  }
+  return targetOffset;
 };
 
 const cleanCursor = () => {
@@ -82,20 +179,21 @@ export const applyCursorPosition = (position: CursorPosition): void => {
   const cursorChar = text.charAt(offset);
   const afterText = text.substring(offset + 1);
 
-  if (!cursorChar) return;
+  if (!cursorChar) return; // Safety check
 
   const cursorSpan = createCursorWrapper(cursorChar);
   const beforeTextNode = document.createTextNode(beforeText);
   const afterTextNode = document.createTextNode(afterText);
 
   const parent = textNode.parentNode!;
+  (parent as Element).classList.add("bg-zinc-700")
   parent.insertBefore(beforeTextNode, textNode);
   parent.insertBefore(cursorSpan, textNode);
   parent.insertBefore(afterTextNode, textNode);
   parent.removeChild(textNode);
 };
 
-// Function cross-tag movement
+// function for cross-tag movement
 const applyCursorCrossTag = (targetTextNode: Text, newOffset: number): void => {
   // First, clean up current position by merging text in current parent
   const cursorSpan = getCursorElement();
@@ -128,6 +226,7 @@ const applyCursorCrossTag = (targetTextNode: Text, newOffset: number): void => {
     if (mergedText) {
       const restoredTextNode = document.createTextNode(mergedText);
       parent.appendChild(restoredTextNode);
+      (parent as Element).classList.remove("bg-zinc-700")
     }
   }
 
@@ -138,7 +237,7 @@ const applyCursorCrossTag = (targetTextNode: Text, newOffset: number): void => {
   });
 };
 
-// Apply cursor in same tag
+// Helper function for Case A: merge text and apply cursor at new offset
 const applyCursorWithMergedText = (newOffset: number): void => {
   const cursorSpan = getCursorElement();
   if (!cursorSpan || !cursorSpan.parentNode) return;
@@ -196,64 +295,133 @@ export const wrapFirstLetter = (): void => {
   }
 }
 
-// Navigation functions - refactored with new merge + offset approach
+// Navigation functions - Simplified using utility functions
 export const navigateRight = (): NavigationResult => {
-  const cursorSpan = getCursorElement();
-  if (!cursorSpan) return { success: false };
-
-  const prevSibling = cursorSpan.previousSibling;
-  const nextSibling = cursorSpan.nextSibling;
-
-  // Calculate current absolute position in merged text
-  let currentPosition = 0;
-  if (prevSibling && prevSibling.nodeType === Node.TEXT_NODE) {
-    currentPosition += (prevSibling.textContent?.length || 0);
-  }
-  // Current position is where cursor character is
-
-  // Calculate total text length
-  let totalLength = currentPosition + 1; // +1 for cursor char
-  if (nextSibling && nextSibling.nodeType === Node.TEXT_NODE) {
-    totalLength += (nextSibling.textContent?.length || 0);
-  }
+  const context = getCursorContext();
+  if (!context) return { success: false };
 
   // Validation: Can we move right within current parent?
-  if (currentPosition + 1 >= totalLength) {
+  if (context.currentPosition + 1 >= context.totalLength) {
     return { success: false, atBoundary: 'end' };
   }
 
   // Case A: Move right by 1 within same parent
-  const newOffset = currentPosition + 1;
   return {
     success: true,
-    newOffset: newOffset
+    newOffset: context.currentPosition + 1
   };
 };
 
 export const navigateLeft = (): NavigationResult => {
-  const cursorSpan = getCursorElement();
-  if (!cursorSpan) return { success: false };
-
-  const prevSibling = cursorSpan.previousSibling;
-
-  // Calculate current absolute position in merged text
-  let currentPosition = 0;
-  if (prevSibling && prevSibling.nodeType === Node.TEXT_NODE) {
-    currentPosition += (prevSibling.textContent?.length || 0);
-  }
-  // Current position is where cursor character is
+  const context = getCursorContext();
+  if (!context) return { success: false };
 
   // Validation: Can we move left within current parent?
-  if (currentPosition <= 0) {
+  if (context.currentPosition <= 0) {
     return { success: false, atBoundary: 'start' };
   }
 
   // Case A: Move left by 1 within same parent
-  const newOffset = currentPosition - 1;
   return {
     success: true,
-    newOffset: newOffset
+    newOffset: context.currentPosition - 1
   };
+};
+
+export const navigateToFirstChar = (): NavigationResult => {
+  const context = getCursorContext();
+  if (!context) return { success: false };
+
+  // Always succeeds - move to beginning of current tag
+  return {
+    success: true,
+    newOffset: 0
+  };
+};
+
+export const navigateToLastChar = (): NavigationResult => {
+  const context = getCursorContext();
+  if (!context) return { success: false };
+
+  // Always succeeds - move to end of current tag
+  const lastOffset = Math.max(0, context.totalLength - 1);
+  return {
+    success: true,
+    newOffset: lastOffset
+  };
+};
+
+export const navigateToFirstTextNode = (): NavigationResult => {
+  const contentElement = getContentSection();
+  if (!contentElement) return { success: false, atBoundary: 'start' };
+
+  // Use TreeWalker to find the very first text node in document
+  const walker = createTextWalker(contentElement);
+  const firstTextNode = walker.nextNode() as Text | null;
+
+  if (!firstTextNode || !firstTextNode.textContent || firstTextNode.textContent.length === 0) {
+    return { success: false, atBoundary: 'start' };
+  }
+
+  // Check if we're already at the target position
+  const context = getCursorContext();
+  if (context) {
+    // Check if cursor is already in the first text node at offset 0
+    const cursorInFirstNode = (context.cursorSpan.parentNode === firstTextNode.parentNode)
+    if (cursorInFirstNode) {
+      return { success: false };
+    }
+    return {
+      success: true,
+      newOffset: 0,
+      crossTag: true,
+      targetTextNode: firstTextNode
+    };
+  }
+
+  return { success: false };
+};
+
+export const navigateToLastTextNode = (): NavigationResult => {
+  const contentElement = getContentSection();
+  if (!contentElement) return { success: false, atBoundary: 'end' };
+
+  // Use TreeWalker to find the very last text node in document
+  const walker = createTextWalker(contentElement);
+
+  // Navigate to the very end of the document
+  let lastValidNode: Text | null = null;
+  let currentNode = walker.nextNode() as Text | null;
+
+  while (currentNode) {
+    // Check if this node has actual content (not just whitespace)
+    if (currentNode.textContent && currentNode.textContent.trim().length > 0) {
+      lastValidNode = currentNode;
+    }
+    currentNode = walker.nextNode() as Text | null;
+  }
+
+  if (!lastValidNode) {
+    return { success: false, atBoundary: 'end' };
+  }
+
+  // Check if we're already at the target position
+  const context = getCursorContext();
+  if (context) {
+    // Check if cursor is already in the last text node
+    const cursorInLastNode = (context.cursorSpan.parentNode === lastValidNode.parentNode)
+    if (cursorInLastNode) {
+      return { success: false };
+    }
+    return {
+      success: true,
+      newOffset: 0,
+      crossTag: true,
+      targetTextNode: lastValidNode
+    };
+  }
+
+  return { success: false };
 };
 
 // Helper functions for word movement
@@ -272,32 +440,12 @@ const getCharType = (char: string): 'word' | 'special' | 'whitespace' => {
 };
 
 export const navigateWordForward = (): NavigationResult => {
-  const cursorSpan = getCursorElement();
-  if (!cursorSpan) return { success: false };
-
-  const prevSibling = cursorSpan.previousSibling;
-  const nextSibling = cursorSpan.nextSibling;
-  const cursorChar = cursorSpan.textContent || '';
-
-  // Build merged text for current parent
-  let mergedText = '';
-  if (prevSibling && prevSibling.nodeType === Node.TEXT_NODE) {
-    mergedText += prevSibling.textContent || '';
-  }
-  mergedText += cursorChar;
-  if (nextSibling && nextSibling.nodeType === Node.TEXT_NODE) {
-    mergedText += nextSibling.textContent || '';
-  }
-
-  // Calculate current position in merged text
-  let currentPosition = 0;
-  if (prevSibling && prevSibling.nodeType === Node.TEXT_NODE) {
-    currentPosition += (prevSibling.textContent?.length || 0);
-  }
+  const context = getCursorContext();
+  if (!context) return { success: false };
 
   // Apply vim word movement logic to merged text
-  let offset = currentPosition;
-  const text = mergedText;
+  let offset = context.currentPosition;
+  const text = context.mergedText;
 
   if (offset >= text.length) {
     return { success: false, atBoundary: 'end' };
@@ -323,106 +471,41 @@ export const navigateWordForward = (): NavigationResult => {
       newOffset: offset
     };
   }
+
   // Case B: Try to move to next tag
-  const contentElement = getContentSection();
-  if (!contentElement) return { success: false, atBoundary: 'end' };
-
-  // Use TreeWalker starting from cursor span
-  const walker = createTextWalker(contentElement);
-  walker.currentNode = cursorSpan;
-
-  // Iterate through next nodes until we find one with text content
-  let nextTextNode = walker.nextNode() as Text | null;
-  if (nextTextNode?.parentNode === cursorSpan.parentNode)
-    nextTextNode = walker.nextNode() as Text | null;
-  while (nextTextNode) {
-    if (nextTextNode.textContent && nextTextNode.textContent.trim().length > 0) {
-      // Skip whitespace at the beginning and find first non-whitespace character
-      const nextText = nextTextNode.textContent;
-      let targetOffset = 0;
-
-      // Skip whitespace at the beginning
-      while (targetOffset < nextText.length && isWhitespace(nextText[targetOffset])) {
-        targetOffset++;
-      }
-
-      // Make sure we found a valid character
-      if (targetOffset >= nextText.length) {
-        targetOffset = nextText.length - 1;
-      }
-
-      // Found next tag with text - jump to first non-whitespace character
-      return {
-        success: true,
-        newOffset: targetOffset,
-        crossTag: true,
-        targetTextNode: nextTextNode
-      };
-    }
-
-    // This node was empty, try the next one
-    nextTextNode = walker.nextNode() as Text | null;
+  const nextTextNode = findCrossTagNode('forward', context.cursorSpan);
+  if (nextTextNode) {
+    const targetOffset = getForwardTargetOffset(nextTextNode.textContent!);
+    return {
+      success: true,
+      newOffset: targetOffset,
+      crossTag: true,
+      targetTextNode: nextTextNode
+    };
   }
 
   return { success: false, atBoundary: 'end' };
 };
 
 export const navigateWordBackward = (): NavigationResult => {
-  const cursorSpan = getCursorElement();
-  if (!cursorSpan) return { success: false };
-
-  const prevSibling = cursorSpan.previousSibling;
-  const nextSibling = cursorSpan.nextSibling;
-  const cursorChar = cursorSpan.textContent || '';
-
-  // Build merged text for current parent
-  let mergedText = '';
-  if (prevSibling && prevSibling.nodeType === Node.TEXT_NODE) {
-    mergedText += prevSibling.textContent || '';
-  }
-  mergedText += cursorChar;
-  if (nextSibling && nextSibling.nodeType === Node.TEXT_NODE) {
-    mergedText += nextSibling.textContent || '';
-  }
-
-  // Calculate current position in merged text
-  let currentPosition = 0;
-  if (prevSibling && prevSibling.nodeType === Node.TEXT_NODE) {
-    currentPosition += (prevSibling.textContent?.length || 0);
-  }
+  const context = getCursorContext();
+  if (!context) return { success: false };
 
   // Apply vim word backward logic to merged text
-  let offset = currentPosition;
-  const text = mergedText;
+  let offset = context.currentPosition;
+  const text = context.mergedText;
 
   if (offset <= 0) {
     // Case B: Try to move to previous tag
-    const contentElement = getContentSection();
-    if (!contentElement) return { success: false, atBoundary: 'start' };
-
-    // Use TreeWalker starting from cursor span
-    const walker = createTextWalker(contentElement);
-    walker.currentNode = cursorSpan;
-
-    // Iterate through previous nodes until we find one with text content
-    let prevTextNode = walker.previousNode() as Text | null;
-    if (prevTextNode?.parentNode === cursorSpan.parentNode)
-      prevTextNode = walker.previousNode() as Text | null;
-    while (prevTextNode) {
-      if (prevTextNode.textContent && prevTextNode.textContent.trim().length > 0) {
-        // Found previous tag with text - jump to end
-        return {
-          success: true,
-          newOffset: prevTextNode.textContent.length - 1,
-          crossTag: true,
-          targetTextNode: prevTextNode
-        };
-      }
-
-      // This node was empty, try the previous one
-      prevTextNode = walker.previousNode() as Text | null;
+    const prevTextNode = findCrossTagNode('backward', context.cursorSpan);
+    if (prevTextNode) {
+      return {
+        success: true,
+        newOffset: prevTextNode.textContent!.length - 1,
+        crossTag: true,
+        targetTextNode: prevTextNode
+      };
     }
-
     return { success: false, atBoundary: 'start' };
   }
 
@@ -460,7 +543,7 @@ export const navigateWordBackward = (): NavigationResult => {
   };
 };
 
-// Movement functions - refactored to use new approach
+// Movement functions - Simplified using utility functions
 export const moveRight = (): void => {
   const result = navigateRight();
   if (result.success && result.newOffset !== undefined) {
@@ -476,6 +559,44 @@ export const moveLeft = (): void => {
     applyCursorWithMergedText(result.newOffset);
   } else if (result.atBoundary) {
     console.log('Reached start of document');
+  }
+};
+
+export const moveToFirstChar = (): void => {
+  const result = navigateToFirstChar();
+  if (result.success && result.newOffset !== undefined) {
+    applyCursorWithMergedText(result.newOffset);
+  }
+};
+
+export const moveToLastChar = (): void => {
+  const result = navigateToLastChar();
+  if (result.success && result.newOffset !== undefined) {
+    applyCursorWithMergedText(result.newOffset);
+  }
+};
+
+export const moveToFirstTextNode = (): void => {
+  const result = navigateToFirstTextNode();
+  if (result.success && result.newOffset !== undefined) {
+    if (result.crossTag && result.targetTextNode) {
+      // Case B: Cross-tag movement to first text node
+      applyCursorCrossTag(result.targetTextNode, result.newOffset);
+    }
+  } else if (result.atBoundary) {
+    console.log('No text content found in document');
+  }
+};
+
+export const moveToLastTextNode = (): void => {
+  const result = navigateToLastTextNode();
+  if (result.success && result.newOffset !== undefined) {
+    if (result.crossTag && result.targetTextNode) {
+      // Case B: Cross-tag movement to last text node
+      applyCursorCrossTag(result.targetTextNode, result.newOffset);
+    }
+  } else if (result.atBoundary) {
+    console.log('No text content found in document');
   }
 };
 
