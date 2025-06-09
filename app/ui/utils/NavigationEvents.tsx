@@ -23,7 +23,9 @@ function Navigation() {
     })
     setNeovimTreeLink(navTreeIndex)
     wrapFirstLetter();
-    isTree ? toggle() : null
+    if (isTree) {
+      toggle()
+    }
   }, [pathname, searchParams]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return <></>

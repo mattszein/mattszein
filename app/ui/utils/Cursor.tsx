@@ -273,8 +273,6 @@ const buildLineMap = (text: string, maxCharsPerLine: number): LineMap => {
   const lines: LineInfo[] = [];
   let currentLineStart = 0;
   let currentLineNumber = 0;
-  let spacesAtFirst = 0
-  let lastPos = 0
 
   // Handle empty text
   if (text.length === 0) {
@@ -309,9 +307,8 @@ const buildLineMap = (text: string, maxCharsPerLine: number): LineMap => {
         }
       }
     }
-    let endOffset = lineEnd - 1
-    let startOffset = currentLineStart
-    lastPos = endOffset
+    const endOffset = lineEnd - 1
+    const startOffset = currentLineStart
     // The last character of this line is at lineEnd - 1
     lines.push({
       startOffset: startOffset,
@@ -910,7 +907,7 @@ export const navigateDown = (): NavigationResult => {
       targetColumn = targetColumn - 1;
     }
 
-    let targetOffset = targetLine.startOffset + targetColumn;
+    const targetOffset = targetLine.startOffset + targetColumn;
 
     // Additional validation to ensure we're within bounds
     if (targetOffset > targetLine.endOffset) {

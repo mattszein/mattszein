@@ -3,7 +3,7 @@
 import { useStore } from "@/app/ui/stores/AppStoreProvider";
 import { useShallow } from "zustand/react/shallow";
 
-export const useToggleTree = () => {
+export const useToggleTree = (): [boolean, () => void] => {
   const [isTree, setIsTree] = useStore(
     useShallow((state) => [state.isNeovimTree, state.setIsNeovimTree]),
   );
