@@ -17,7 +17,7 @@ export type NeovimTreeActions = {
 export type NeovimTreeSlice = NeovimTree & NeovimTreeActions;
 
 export const defaultState: NeovimTree = {
-  isNeovimTree: true,
+  isNeovimTree: false,
   neovimTreeLink: -1
 };
 

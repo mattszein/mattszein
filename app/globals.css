@@ -18,6 +18,22 @@
   --color-foreground: var(--foreground);
 }
 
+@theme {
+  @keyframes cursor {
+    0%,
+    100% {
+      background-color: inherit;
+      color: #fff;
+    }
+    50% {
+      background-color: #fff;
+      color: #000;
+    }
+  }
+
+  --animate-cursor: cursor 1s step-start infinite;
+}
+
 @layer base {
 body {
   color: var(--foreground);

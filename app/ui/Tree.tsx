@@ -35,7 +35,7 @@ export default function Tree() {
   useEffect(() => setSelected(neovimTreeLink), [neovimTreeLink])
 
   return (
-    <aside id="tree" className="overflow-y-auto border-r-2 border-zinc-600 ">
+    <aside id="tree" className="overflow-y-auto border-r-2 border-zinc-600 hidden">
       <nav className="w-72 text-white text-lg">
         <div className="group flex items-center py-1">
           <h1 className="text-lg text-cyan-100 font-semibold ml-4">Neo-tree</h1>

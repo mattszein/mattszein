@@ -5,6 +5,8 @@ import { useStore } from "@/app/ui/stores/AppStoreProvider";
 import { useShallow } from "zustand/react/shallow";
 import { LinkList } from "@/app/ui/link_list";
 import { Suspense } from 'react'
+import { wrapFirstLetter } from "./Cursor";
+import { useToggleTree } from "@/app/ui/neovim/Tree"
 
 function Navigation() {
   const pathname = usePathname();
@@ -12,6 +14,7 @@ function Navigation() {
   const [setNeovimTreeLink] = useStore(
     useShallow((state) => [state.setNeovimTreeLink]),
   );
+  const [isTree, toggle] = useToggleTree()
 
   useEffect(() => {
     // init neovimTree index
@@ -19,6 +22,10 @@ function Navigation() {
       return link.href === pathname;
     })
     setNeovimTreeLink(navTreeIndex)
+    wrapFirstLetter();
+    if (isTree) {
+      toggle()
+    }
   }, [pathname, searchParams]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return <></>
