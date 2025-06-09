@@ -13,7 +13,7 @@ export default function Terminal({
       <main className="flex flex-1 overflow-hidden snap-align-none font-mono text-lg">
         <Tree />
         <Line />
-        <section className="flex-1 overflow-auto no-scrollbar snap-align-none text-white px-4">
+        <section className="flex-1 overflow-auto no-scrollbar snap-align-none text-white px-4 break-words break-normal ">
           <div id="terminal-content">
             {children}
           </div>

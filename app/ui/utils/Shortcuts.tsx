@@ -2,13 +2,15 @@
 import { useHotkeys } from "react-hotkeys-hook";
 import { useToggleTree } from "@/app/ui/neovim/Tree"
 import { Suspense } from 'react'
-import { moveRight, moveLeft, moveWordBackward, moveWordForward, moveToFirstChar, moveToLastChar, moveToFirstTextNode, moveToLastTextNode } from "./Cursor";
+import { moveRight, moveLeft, moveWordBackward, moveWordForward, moveToFirstChar, moveToLastChar, moveToFirstTextNode, moveToLastTextNode, moveUp, moveDown } from "./Cursor";
 
 function ShortcutsLoader() {
   const [toggle] = useToggleTree()
   useHotkeys("space+e", () => toggle());
   useHotkeys('l', moveRight);
   useHotkeys('h', moveLeft);
+  useHotkeys('k', moveUp);    // Vim up
+  useHotkeys('j', moveDown);  // Vim down
   useHotkeys('w', moveWordForward);
   useHotkeys('b', moveWordBackward);
   useHotkeys('0', moveToFirstChar);
