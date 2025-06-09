@@ -5,18 +5,18 @@ import { Suspense } from 'react'
 import { moveRight, moveLeft, moveWordBackward, moveWordForward, moveToFirstChar, moveToLastChar, moveToFirstTextNode, moveToLastTextNode, moveUp, moveDown } from "./Cursor";
 
 function ShortcutsLoader() {
-  const [toggle] = useToggleTree()
+  const [isTree, toggle] = useToggleTree()
   useHotkeys("space+e", () => toggle());
-  useHotkeys('l', moveRight);
-  useHotkeys('h', moveLeft);
-  useHotkeys('k', moveUp);    // Vim up
-  useHotkeys('j', moveDown);  // Vim down
-  useHotkeys('w', moveWordForward);
-  useHotkeys('b', moveWordBackward);
-  useHotkeys('0', moveToFirstChar);
-  useHotkeys('shift+4', moveToLastChar); // $ key
-  useHotkeys('g', moveToFirstTextNode);  // Double g
-  useHotkeys('shift+g', moveToLastTextNode); // G key
+  useHotkeys('l', moveRight, { enabled: !isTree });
+  useHotkeys('h', moveLeft, { enabled: !isTree });
+  useHotkeys('k', moveUp, { enabled: !isTree });    // Vim up
+  useHotkeys('j', moveDown, { enabled: !isTree });  // Vim down
+  useHotkeys('w', moveWordForward, { enabled: !isTree });
+  useHotkeys('b', moveWordBackward, { enabled: !isTree });
+  useHotkeys('0', moveToFirstChar, { enabled: !isTree });
+  useHotkeys('shift+4', moveToLastChar, { enabled: !isTree }); // $ key
+  useHotkeys('g', moveToFirstTextNode, { enabled: !isTree });  // Double g
+  useHotkeys('shift+g', moveToLastTextNode, { enabled: !isTree }); // G key
   return <></>
 }
 
