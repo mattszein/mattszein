@@ -10,7 +10,7 @@ export default function Terminal({
   return (
     <div className="flex flex-col flex-1 bg-zinc-800 text-white overflow-hidden snap-align-none">
       <Header />
-      <main className="flex flex-1 overflow-hidden snap-align-none font-mono text-lg">
+      <main className="flex flex-1 overflow-hidden snap-align-none font-mono text-lg text-white">
         <Tree />
         <Line />
         <section className="flex-1 overflow-auto no-scrollbar snap-align-none text-white px-4 break-words break-normal ">
