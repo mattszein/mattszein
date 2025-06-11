@@ -1,7 +1,7 @@
 "use client";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useToggleTree } from "@/app/ui/neovim/Tree"
-import { Suspense } from 'react'
+import { Suspense, useEffect } from 'react'
 import { moveRight, moveLeft, moveWordBackward, moveWordForward, moveToFirstChar, moveToLastChar, moveToFirstTextNode, moveToLastTextNode, moveUp, moveDown } from "./Cursor";
 
 function ShortcutsLoader() {
@@ -21,6 +21,14 @@ function ShortcutsLoader() {
 }
 
 const Shortcuts = () => {
+  useEffect(() => {
+    window.addEventListener('keydown', function (e) {
+      if (e.key == ' ' && e.target == document.body) {
+        e.preventDefault();
+      }
+    });
+
+  }, [])
   return <Suspense><ShortcutsLoader /></Suspense>
 };
 
