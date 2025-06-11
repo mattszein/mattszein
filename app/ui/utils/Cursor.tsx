@@ -1,4 +1,5 @@
-export const NVIM_CONTENT = 'terminal-content'
+export const NVIM_CONTENT = 'nvim-content'
+export const NVIM_TEXT_CONTENT = 'nvim-text-content'
 export const CURRENT_CURSOR = 'cursor-text'
 
 // Types
@@ -49,10 +50,13 @@ interface LineMap {
   maxCharsPerLine: number;
 }
 
+
+export const getContentSection = () => document.getElementById(NVIM_CONTENT)
+
 /**
  * Gets the main content container element where cursor navigation should takes place
  */
-export const getContentSection = () => document.getElementById(NVIM_CONTENT)
+export const getTextContentSection = () => document.getElementById(NVIM_TEXT_CONTENT)
 
 /**
  * Retrieves the current cursor element from the DOM
@@ -185,7 +189,7 @@ const getCursorContext = (): CursorContext | null => {
  * @returns The target text node or null if no suitable node found
  */
 const findCrossTagNode = (direction: 'forward' | 'backward', cursorSpan: HTMLSpanElement): Text | null => {
-  const contentElement = getContentSection();
+  const contentElement = getTextContentSection();
   if (!contentElement) return null;
 
   const walker = createTextWalker(contentElement);
@@ -243,7 +247,7 @@ const getForwardTargetOffset = (text: string): number => {
  * @throws Error if required elements (content section or cursor) are not found
  */
 const calculateLayoutMetrics = (): LayoutMetrics => {
-  const contentSection = getContentSection();
+  const contentSection = getTextContentSection();
   const cursorSpan = getCursorElement();
 
   if (!contentSection || !cursorSpan) {
@@ -411,6 +415,9 @@ export const applyCursorPosition = (position: CursorPosition): void => {
   parent.insertBefore(cursorSpan, textNode);
   parent.insertBefore(afterTextNode, textNode);
   parent.removeChild(textNode);
+  const isVisible = isElementVisibleInScrollableDiv(cursorSpan, getContentSection() as HTMLElement)
+  console.log("is visible is ...", isVisible)
+  if (!isVisible) cursorSpan.scrollIntoView({ block: "end" })
 };
 
 /**
@@ -511,7 +518,7 @@ const applyCursorWithMergedText = (newOffset: number): void => {
  * Initializes the cursor by positioning it at the first character of the content
  */
 export const wrapFirstLetter = (): void => {
-  const contentElement = getContentSection();
+  const contentElement = getTextContentSection();
   if (!contentElement) {
     console.log("Element with id 'terminal-content' not found");
     return;
@@ -527,6 +534,19 @@ export const wrapFirstLetter = (): void => {
   } else {
     console.warn('No text content found to initialize cursor');
   }
+}
+
+function isElementVisibleInScrollableDiv(element: HTMLElement, container: HTMLElement) {
+  const elementRect = element.getBoundingClientRect();
+  const containerRect = container.getBoundingClientRect();
+
+  // Check if element is within container bounds
+  return (
+    elementRect.top >= containerRect.top &&
+    elementRect.left >= containerRect.left &&
+    elementRect.bottom <= containerRect.bottom &&
+    elementRect.right <= containerRect.right
+  );
 }
 
 // =============================================================================
@@ -620,7 +640,7 @@ export const navigateToLastChar = (): NavigationResult => {
  * @returns NavigationResult with cross-tag movement to first node, or failure if already there
  */
 export const navigateToFirstTextNode = (): NavigationResult => {
-  const contentElement = getContentSection();
+  const contentElement = getTextContentSection();
   if (!contentElement) return { success: false, atBoundary: 'start' };
 
   // Use TreeWalker to find the very first text node in document
@@ -651,7 +671,7 @@ export const navigateToFirstTextNode = (): NavigationResult => {
 };
 
 export const navigateToLastTextNode = (): NavigationResult => {
-  const contentElement = getContentSection();
+  const contentElement = getTextContentSection();
   if (!contentElement) return { success: false, atBoundary: 'end' };
 
   // Use TreeWalker to find the very last text node in document

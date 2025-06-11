@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from "react";
-import { getContentSection } from "../utils/Cursor"
+import { getTextContentSection } from "../utils/Cursor"
 
 const Line = () => {
   const [linesCount, setLinesCount] = useState(0)
@@ -9,14 +9,14 @@ const Line = () => {
   ));
 
   useEffect(() => {
-    const content = getContentSection()!
+    const content = getTextContentSection()!
     const styles = getComputedStyle(content)
     const lineHeight = parseInt(styles.lineHeight);
-    const lines = content.getBoundingClientRect().height / lineHeight
+    const lines = content.scrollHeight / lineHeight
     setLinesCount(lines)
   }, [])
 
-  return <div className="w-8 h-full text-right overflow-auto no-scrollbar snap-align-none">
+  return <div className="w-32 h-full text-right  snap-align-none">
     {items}
   </div>
 }
