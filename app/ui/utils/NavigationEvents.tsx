@@ -16,8 +16,8 @@ function Navigation() {
     useShallow((state) => [state.setNeovimTreeLink]),
   );
   const [isTree, toggle] = useToggleTree()
-  const [lines, setLines] = useStore(
-    useShallow((state) => [state.contentLines, state.setContentLines]),)
+  const [setLines] = useStore(
+    useShallow((state) => [state.setContentLines]))
 
   useEffect(() => {
     // init neovimTree index
