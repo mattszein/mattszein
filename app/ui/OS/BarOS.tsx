@@ -2,10 +2,10 @@ import Battery from "@/app/ui/icons/OS/Battery"
 import DateTime from "@/app/ui/OS/DateTime"
 
 const BarOS = () => {
-  return <div className="flex bg-zinc-900 text-sm font-bold">
+  return <div className="flex bg-zinc-900 font-bold text-sm sm:text-md">
     <div className="basis-1/3">
       <ul className="flex gap-1">
-        <li className="hover:bg-zinc-700 hover:rounded-2xl py-1 px-2 m-1 cursor-default">Workspaces</li>
+        <li className="hover:bg-zinc-700 hover:rounded-2xl py-1 px-2 m-1 cursor-default sm:block hidden">Workspaces</li>
         <li className="hover:bg-zinc-700 hover:rounded-2xl py-1 px-2 m-1 cursor-default">Applications</li>
       </ul>
     </div>
