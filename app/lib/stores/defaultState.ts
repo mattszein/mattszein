@@ -1,7 +1,9 @@
-import { NeovimTree, defaultState as defaultTerminalTreeState } from "./slices/NeovimTree";
+import { NeovimTree, defaultState as defaultNeovimTreeState } from "./slices/NeovimTree";
+import { Neovim, defaultState as defaultNeovimState } from "./slices/Neovim";
 
-export type StoreState = NeovimTree
+export type StoreState = NeovimTree & Neovim
 
 export const defaultState = {
-  ...defaultTerminalTreeState,
+  ...defaultNeovimTreeState,
+  ...defaultNeovimState
 };

@@ -416,7 +416,6 @@ export const applyCursorPosition = (position: CursorPosition): void => {
   parent.insertBefore(afterTextNode, textNode);
   parent.removeChild(textNode);
   const isVisible = isElementVisibleInScrollableDiv(cursorSpan, getContentSection() as HTMLElement)
-  console.log("is visible is ...", isVisible)
   if (!isVisible) cursorSpan.scrollIntoView({ block: "end" })
 };
 

@@ -7,6 +7,7 @@ import { LinkList } from "@/app/ui/link_list";
 import { Suspense } from 'react'
 import { wrapFirstLetter } from "./Cursor";
 import { useToggleTree } from "@/app/ui/neovim/Tree"
+import { calculateLines } from "../neovim/utils";
 
 function Navigation() {
   const pathname = usePathname();
@@ -15,6 +16,8 @@ function Navigation() {
     useShallow((state) => [state.setNeovimTreeLink]),
   );
   const [isTree, toggle] = useToggleTree()
+  const [lines, setLines] = useStore(
+    useShallow((state) => [state.contentLines, state.setContentLines]),)
 
   useEffect(() => {
     // init neovimTree index
@@ -26,6 +29,7 @@ function Navigation() {
     if (isTree) {
       toggle()
     }
+    setLines(calculateLines())
   }, [pathname, searchParams]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return <></>
