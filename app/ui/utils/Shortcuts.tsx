@@ -7,10 +7,10 @@ import { moveRight, moveLeft, moveWordBackward, moveWordForward, moveToFirstChar
 function ShortcutsLoader() {
   const [isTree, toggle] = useToggleTree()
   useHotkeys("space+e", () => toggle());
-  useHotkeys('l', moveRight, { enabled: !isTree });
-  useHotkeys('h', moveLeft, { enabled: !isTree });
-  useHotkeys('k', moveUp, { enabled: !isTree });    // Vim up
-  useHotkeys('j', moveDown, { enabled: !isTree });  // Vim down
+  useHotkeys(['l', 'ArrowRight'], moveRight, { enabled: !isTree });
+  useHotkeys(['h', 'ArrowLeft'], moveLeft, { enabled: !isTree });
+  useHotkeys(['k', 'ArrowUp'], moveUp, { enabled: !isTree });    // Vim up
+  useHotkeys(['j', 'ArrowDown'], moveDown, { enabled: !isTree });  // Vim down
   useHotkeys('w', moveWordForward, { enabled: !isTree });
   useHotkeys('b', moveWordBackward, { enabled: !isTree });
   useHotkeys('0', moveToFirstChar, { enabled: !isTree });
@@ -23,7 +23,7 @@ function ShortcutsLoader() {
 const Shortcuts = () => {
   useEffect(() => {
     window.addEventListener('keydown', function (e) {
-      if (e.key == ' ' && e.target == document.body) {
+      if (e.key == ' ' || e.key == 'ArrowDown' || e.key == 'ArrowRight' || e.key == 'ArrowUp' || e.key == 'ArrowLeft' && e.target == document.body) {
         e.preventDefault();
       }
     });
