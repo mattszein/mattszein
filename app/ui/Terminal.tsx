@@ -1,7 +1,7 @@
 import Header from "@/app/ui/Header";
 import Tree from "@/app/ui/Tree";
 import Line from "@/app/ui/neovim/Line";
-import { NVIM_CONTENT, NVIM_TEXT_CONTENT } from "@/app/ui/utils/Cursor"
+import { NVIM_CONTENT, NVIM_TEXT_CONTENT } from "@/app/ui/utils/types"
 
 export default function Terminal({
   children,

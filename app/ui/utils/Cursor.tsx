@@ -1,55 +1,7 @@
-export const NVIM_CONTENT = 'nvim-content'
-export const NVIM_TEXT_CONTENT = 'nvim-text-content'
-export const CURRENT_CURSOR = 'cursor-text'
+import GraphemeSplitter from "grapheme-splitter";
+import { NVIM_CONTENT, NVIM_TEXT_CONTENT, CURRENT_CURSOR, CursorPosition, NavigationResult, CursorContext, LayoutMetrics, LinePosition, LineInfo, LineMap } from "./types";
 
-// Types
-interface CursorPosition {
-  textNode: Text;
-  offset: number;
-}
-
-interface NavigationResult {
-  success: boolean;
-  newOffset?: number;
-  atBoundary?: 'start' | 'end';
-  crossTag?: boolean;
-  targetTextNode?: Text;
-}
-
-interface CursorContext {
-  cursorSpan: HTMLSpanElement;
-  prevSibling: Node | null;
-  nextSibling: Node | null;
-  cursorChar: string;
-  currentPosition: number;
-  mergedText: string;
-  totalLength: number;
-}
-
-interface LayoutMetrics {
-  characterWidth: number;
-  containerWidth: number;
-  maxCharactersPerLine: number;
-}
-
-interface LinePosition {
-  line: number;
-  column: number;
-  metrics: LayoutMetrics;
-}
-
-// Add these new interfaces to your existing ones
-interface LineInfo {
-  startOffset: number;
-  endOffset: number;
-  lineNumber: number;
-}
-
-interface LineMap {
-  lines: LineInfo[];
-  maxCharsPerLine: number;
-}
-
+const splitter = new GraphemeSplitter();
 
 export const getContentSection = () => document.getElementById(NVIM_CONTENT)
 
@@ -97,10 +49,6 @@ const isWordChar = (char: string): boolean => {
 const isWhitespace = (char: string): boolean => {
   return /\s/.test(char);
 };
-
-const isEmoji = (char: string): boolean => {
-  return /(?:[\u2700-\u27bf]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff]|[\u0023-\u0039]\ufe0f?\u20e3|\u3299|\u3297|\u303d|\u3030|\u24c2|\ud83c[\udd70-\udd71]|\ud83c[\udd7e-\udd7f]|\ud83c\udd8e|\ud83c[\udd91-\udd9a]|\ud83c[\udde6-\uddff]|\ud83c[\ude01-\ude02]|\ud83c\ude1a|\ud83c\ude2f|\ud83c[\ude32-\ude3a]|\ud83c[\ude50-\ude51]|\u203c|\u2049|[\u25aa-\u25ab]|\u25b6|\u25c0|[\u25fb-\u25fe]|\u00a9|\u00ae|\u2122|\u2139|\ud83c\udc04|[\u2600-\u26FF]|\u2b05|\u2b06|\u2b07|\u2b1b|\u2b1c|\u2b50|\u2b55|\u231a|\u231b|\u2328|\u23cf|[\u23e9-\u23f3]|[\u23f8-\u23fa]|\ud83c\udccf|\u2934|\u2935|[\u2190-\u21ff])/g.test(char)
-}
 
 /**
  * Categorizes a character into one of three types for navigation logic
@@ -151,12 +99,6 @@ const getCursorContext = (): CursorContext | null => {
   const nextSibling = cursorSpan.nextSibling;
   const cursorChar = cursorSpan.textContent || '';
 
-  // Calculate current position in merged text
-  let currentPosition = 0;
-  if (prevSibling && prevSibling.nodeType === Node.TEXT_NODE) {
-    currentPosition += (prevSibling.textContent?.length || 0);
-  }
-
   // Build merged text for current parent
   let mergedText = '';
   if (prevSibling && prevSibling.nodeType === Node.TEXT_NODE) {
@@ -167,7 +109,20 @@ const getCursorContext = (): CursorContext | null => {
     mergedText += nextSibling.textContent || '';
   }
 
-  const totalLength = mergedText.length;
+  // Split merged text into grapheme clusters
+  const mergedGraphemes = splitter.splitGraphemes(mergedText);
+
+  // currentPosition = number of graphemes before the cursor,
+  // which is simply the grapheme-length of the previous sibling (if any)
+  let currentPosition = 0;
+  if (prevSibling && prevSibling.nodeType === Node.TEXT_NODE) {
+    const prevText = prevSibling.textContent || '';
+    currentPosition = splitter.splitGraphemes(prevText).length;
+  } else {
+    currentPosition = 0;
+  }
+
+  const totalLength = mergedGraphemes.length;
 
   return {
     cursorSpan,
@@ -176,6 +131,7 @@ const getCursorContext = (): CursorContext | null => {
     cursorChar,
     currentPosition,
     mergedText,
+    mergedGraphemes,
     totalLength
   };
 };
@@ -227,14 +183,13 @@ const findCrossTagNode = (direction: 'forward' | 'backward', cursorSpan: HTMLSpa
  * @returns The offset position where cursor should be placed
  */
 const getForwardTargetOffset = (text: string): number => {
+  const graphemes = splitter.splitGraphemes(text);
   let targetOffset = 0;
-  // Skip whitespace at the beginning
-  while (targetOffset < text.length && isWhitespace(text[targetOffset])) {
+  while (targetOffset < graphemes.length && isWhitespace(graphemes[targetOffset])) {
     targetOffset++;
   }
-  // Make sure we found a valid character
-  if (targetOffset >= text.length) {
-    targetOffset = text.length - 1;
+  if (targetOffset >= graphemes.length) {
+    return Math.max(0, graphemes.length - 1);
   }
   return targetOffset;
 };
@@ -254,8 +209,26 @@ const calculateLayoutMetrics = (): LayoutMetrics => {
     throw new Error('Required elements not found');
   }
 
+  // Create a temporary element to measure average character width
+  const measureSpan = document.createElement('span');
+  measureSpan.style.visibility = 'hidden';
+  measureSpan.style.position = 'absolute';
+  measureSpan.style.whiteSpace = 'pre';
+
+  // Copy the same font styles from the content section
+  const computedStyle = window.getComputedStyle(contentSection);
+  measureSpan.style.fontFamily = computedStyle.fontFamily;
+  measureSpan.style.fontSize = computedStyle.fontSize;
+  measureSpan.style.fontWeight = computedStyle.fontWeight;
+
+  // Measure with a sample of regular characters
+  measureSpan.textContent = 'A';
+  contentSection.appendChild(measureSpan);
+
+  const sampleWidth = measureSpan.getBoundingClientRect().width;
+  const characterWidth = sampleWidth; // Average width per character
+
   // Use cursor span width directly - perfect for monospace measurement!
-  const characterWidth = cursorSpan.getBoundingClientRect().width;
   const containerWidth = contentSection.getBoundingClientRect().width;
   const maxCharactersPerLine = Math.floor(containerWidth / characterWidth);
 
@@ -273,52 +246,50 @@ const calculateLayoutMetrics = (): LayoutMetrics => {
  * @param maxCharsPerLine - Maximum characters that fit on one line
  * @returns LineMap with array of line info (start/end offsets) and metadata
  */
-const buildLineMap = (text: string, maxCharsPerLine: number): LineMap => {
+
+const buildLineMap = (
+  text: string[],
+  maxCharsPerLine: number
+): LineMap => {
+  const graphemes = Array.isArray(text) ? text : splitter.splitGraphemes(text);
   const lines: LineInfo[] = [];
   let currentLineStart = 0;
   let currentLineNumber = 0;
 
-  // Handle empty text
-  if (text.length === 0) {
+  if (graphemes.length === 0) {
     return { lines: [], maxCharsPerLine };
   }
 
-  while (currentLineStart < text.length) {
-    // Calculate theoretical line end (exclusive - points to first char of next line)
-    let lineEnd = Math.min(currentLineStart + maxCharsPerLine, text.length);
-    if (text[currentLineStart] === ' ') lineEnd++
+  while (currentLineStart < graphemes.length) {
+    let lineEnd = Math.min(currentLineStart + maxCharsPerLine, graphemes.length);
 
-    // If we're not at the end of the text and we're breaking inside a word
-    if (lineEnd < text.length) {
-      const charAtBreak = text[lineEnd];
-      const charBeforeBreak = text[lineEnd - 1];
+    if (graphemes[currentLineStart] === " ") lineEnd++;
 
-      // Check if we're breaking in the middle of a word
+    if (lineEnd < graphemes.length) {
+      const charAtBreak = graphemes[lineEnd];
+      const charBeforeBreak = graphemes[lineEnd - 1];
+
       if (isWordChar(charAtBreak) && isWordChar(charBeforeBreak)) {
-        // Scan backwards to find the start of the word
         let wordStart = lineEnd - 1;
-        while (wordStart > currentLineStart && isWordChar(text[wordStart - 1])) {
+        while (
+          wordStart > currentLineStart &&
+          isWordChar(graphemes[wordStart - 1])
+        ) {
           wordStart--;
         }
 
-        // If the word starts at the beginning of the line, we can't wrap it
-        if (wordStart === currentLineStart) {
-          // Keep the original lineEnd (break the word)
-          lineEnd = Math.min(currentLineStart + maxCharsPerLine, text.length);
-        } else {
-          // Wrap at the word boundary
+        if (wordStart !== currentLineStart) {
           lineEnd = wordStart;
         }
       }
     }
-    const endOffset = lineEnd - 1
-    const startOffset = currentLineStart
-    // The last character of this line is at lineEnd - 1
+
     lines.push({
-      startOffset: startOffset,
-      endOffset: endOffset,
-      lineNumber: currentLineNumber
+      startOffset: currentLineStart,
+      endOffset: lineEnd - 1,
+      lineNumber: currentLineNumber,
     });
+
     currentLineStart = lineEnd;
     currentLineNumber++;
   }
@@ -339,7 +310,7 @@ const getCurrentLinePosition = (): LinePosition | null => {
   const currentOffset = context.currentPosition;
 
   // Build accurate line map
-  const lineMap = buildLineMap(context.mergedText, metrics.maxCharactersPerLine);
+  const lineMap = buildLineMap(context.mergedGraphemes, metrics.maxCharactersPerLine);
 
   // Find which line the cursor is on
   let currentLine = 0;
@@ -394,16 +365,18 @@ const cleanCursor = () => {
  */
 export const applyCursorPosition = (position: CursorPosition): void => {
   const { textNode, offset } = position;
-  const text = textNode.textContent!;
+  const text = textNode.textContent || '';
 
   cleanCursor();
+  const graphemes = splitter.splitGraphemes(text);
+  // Safety: must be inside valid grapheme range (your code always uses offsets in [0..len-1])
+  if (graphemes.length === 0) return;
+  if (offset < 0 || offset >= graphemes.length) return;
 
   // Create new cursor at target position
-  const beforeText = text.substring(0, offset);
-  const cursorChar = text.charAt(offset);
-  const afterText = text.substring(offset + 1);
-
-  if (!cursorChar) return; // Safety check
+  const beforeText = graphemes.slice(0, offset).join("");
+  const cursorChar = graphemes[offset];
+  const afterText = graphemes.slice(offset + 1).join("");
 
   const cursorSpan = createCursorWrapper(cursorChar);
   const beforeTextNode = document.createTextNode(beforeText);
@@ -562,15 +535,14 @@ export const navigateRight = (): NavigationResult => {
   const context = getCursorContext();
   if (!context) return { success: false };
 
+  const { currentPosition, totalLength } = context;
+
   // Validation: Can we move right within current parent?
-  if (context.currentPosition + 1 >= context.totalLength) {
-    return { success: false, atBoundary: 'end' };
+  if (currentPosition + 1 >= totalLength) {
+    return { success: false, atBoundary: "end" };
   }
-  let offset = context.currentPosition + 1
-  if (isEmoji(context.mergedText[context.currentPosition])) {
-    offset = offset + 1
-  }
-  // Case A: Move right by 1 within same parent
+  const offset = context.currentPosition + 1
+
   return {
     success: true,
     newOffset: offset
@@ -587,19 +559,15 @@ export const navigateLeft = (): NavigationResult => {
   const context = getCursorContext();
   if (!context) return { success: false };
 
-  // Validation: Can we move left within current parent?
-  if (context.currentPosition <= 0) {
-    return { success: false, atBoundary: 'start' };
+  const { currentPosition } = context;
+
+  if (currentPosition === 0) {
+    return { success: false, atBoundary: "start" };
   }
 
-  let offset = context.currentPosition - 1
-  if (isEmoji(context.mergedText[context.currentPosition - 2])) {
-    offset = offset - 1
-  }
-  // Case A: Move left by 1 within same parent
   return {
     success: true,
-    newOffset: offset
+    newOffset: currentPosition - 1, // move one grapheme left
   };
 };
 
@@ -717,7 +685,7 @@ export const navigateWordForward = (): NavigationResult => {
 
   // Apply vim word movement logic to merged text
   let offset = context.currentPosition;
-  const text = context.mergedText;
+  const text = context.mergedGraphemes;
 
   if (offset >= text.length) {
     return { success: false, atBoundary: 'end' };
@@ -765,15 +733,16 @@ export const navigateWordBackward = (): NavigationResult => {
 
   // Apply vim word backward logic to merged text
   let offset = context.currentPosition;
-  const text = context.mergedText;
+  const text = context.mergedGraphemes;
 
   if (offset <= 0) {
     // Case B: Try to move to previous tag
     const prevTextNode = findCrossTagNode('backward', context.cursorSpan);
+    const prevTextGrapheme = splitter.splitGraphemes(prevTextNode?.textContent || "");
     if (prevTextNode) {
       return {
         success: true,
-        newOffset: prevTextNode.textContent!.length - 1,
+        newOffset: prevTextGrapheme.length - 1,
         crossTag: true,
         targetTextNode: prevTextNode
       };
@@ -823,17 +792,17 @@ export const navigateUp = (): NavigationResult => {
   if (!context) return { success: false };
 
   // Build line map for current text
-  const lineMap = buildLineMap(context.mergedText, current.metrics.maxCharactersPerLine);
+  const lineMap = buildLineMap(context.mergedGraphemes, current.metrics.maxCharactersPerLine);
 
   const currentLine = lineMap.lines[current.line];
 
   if (current.line > 0) {
     // Case A: Move up within current tag
     const targetLine = lineMap.lines[current.line - 1];
-    const prevLineStartWithSpace = context.mergedText[targetLine.startOffset] === ' '
+    const prevLineStartWithSpace = context.mergedGraphemes[targetLine.startOffset] === ' '
 
     // Check if current line starts with a space
-    const currentLineFirstChar = context.mergedText[currentLine.startOffset];
+    const currentLineFirstChar = context.mergedGraphemes[currentLine.startOffset];
     const currentStartsWithSpace = currentLineFirstChar === ' ';
 
     // Calculate the actual line length (endOffset - startOffset + 1)
@@ -865,7 +834,7 @@ export const navigateUp = (): NavigationResult => {
     if (!prevTextNode) return { success: false, atBoundary: 'start' };
 
     // Build line map for previous tag
-    const prevText = prevTextNode.textContent!;
+    const prevText = splitter.splitGraphemes(prevTextNode.textContent || "")
     const prevLineMap = buildLineMap(prevText, current.metrics.maxCharactersPerLine);
 
     if (prevLineMap.lines.length > 0) {
@@ -900,7 +869,7 @@ export const navigateDown = (): NavigationResult => {
   if (!context) return { success: false };
 
   // Build line map for current text
-  const lineMap = buildLineMap(context.mergedText, current.metrics.maxCharactersPerLine);
+  const lineMap = buildLineMap(context.mergedGraphemes, current.metrics.maxCharactersPerLine);
 
   const currentLine = lineMap.lines[current.line];
   if (current.line < lineMap.lines.length - 1) {
@@ -908,10 +877,10 @@ export const navigateDown = (): NavigationResult => {
     const targetLine = lineMap.lines[current.line + 1];
 
     // Check if current line has a word break (doesn't use full width)
-    const currentStartsWithSpace = context.mergedText[currentLine.startOffset] === ' '
+    const currentStartsWithSpace = context.mergedGraphemes[currentLine.startOffset] === ' '
 
     // Check if target line starts with a space
-    const targetLineFirstChar = context.mergedText[targetLine.startOffset];
+    const targetLineFirstChar = context.mergedGraphemes[targetLine.startOffset];
     const targetStartsWithSpace = targetLineFirstChar === ' ';
 
     // When moving from a full-width line, we need to be careful about the offset calculation
@@ -940,7 +909,7 @@ export const navigateDown = (): NavigationResult => {
     if (!nextTextNode) return { success: false, atBoundary: 'end' };
 
     // Build line map for next tag
-    const nextText = nextTextNode.textContent!;
+    const nextText = splitter.splitGraphemes(nextTextNode.textContent || "")
     const nextLineMap = buildLineMap(nextText, current.metrics.maxCharactersPerLine);
 
     if (nextLineMap.lines.length > 0) {
