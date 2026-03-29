@@ -5,7 +5,7 @@ import { useStore } from "@/app/ui/stores/AppStoreProvider";
 import { useShallow } from "zustand/react/shallow";
 import { LinkList } from "@/app/ui/link_list";
 import { Suspense } from 'react'
-import { wrapFirstLetter } from "./Cursor";
+import { wrapFirstLetter } from "./cursor";
 import { useToggleTree } from "@/app/ui/neovim/Tree"
 import { calculateLines } from "../neovim/utils";
 
