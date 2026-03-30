@@ -1,0 +1,32 @@
+# DevAIFlow 🤖
+
+Your flow. Your code.
+
+AI coding assistants are useful, but the industry wants you to run everything through their cloud, their context, their workflow. You become a user of someone else's tool instead of an engineer who controls their own system. DevAIFlow starts from a different premise: you define what the AI does, in what order, with what tools, and with what human checkpoints: All on your infrastructure, with your data.
+
+Status: In progress.
+<br />
+
+## Three Layers 🧱
+
+* FlowSpec: A universal standard for AI agent pipelines. Flow definitions in YAML, versioned in your repo. Steps declare their agent, skill, input/output, and whether they need human approval.
+* DevKit: A Server tooling for isolated execution. Environments per feature, ephemeral agent containers, scoped Docker proxy so the AI can interact with its own environment but nothing else. Multiple agents run in parallel without interference. An orchestration layer that manages flow execution, human approvals, and logging.
+* Platform: Web UI that connects to your own server. Project management, flow builder, real-time execution dashboard, approval inbox, and project chat. It's a window into your system.
+
+<br />
+## How It Works 🔑
+* Define a flow in YAML: plan → review → implement → test, with human approval gates at any step.
+* The orchestrator reads the flow, executes steps in order. For each step, it spins up a container with the declared agent and skill, feeds it the input, and captures the output.
+* Coding Agents executed in their specific environment. Swap Gemini for Claude for a local model without changing the flow.
+* Human loops are first-class. The AI proposes, you review from the web UI or your phone via Signal/Slack, you decide.
+* Every run captures: tokens, costs, timestamps, agent output, approval state. Your data, queryable when you need it.
+* Every Agent log is then processed to get hints on how to improve the flow, the prompts, or the agents themselves. It's a feedback loop for continuous improvement.
+
+<br />
+## Design Principles ⚡
+* You own the data: Every execution log stored where you configure it.
+* You own the flow: YAML files in your repo, not locked in a vendor's database.
+* Provider agnostic: local models are first-class citizens.
+* Boring tasks should be boring: delegate the mechanical parts, spend time on what requires judgment.
+
+<br />

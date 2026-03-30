@@ -1,0 +1,30 @@
+# Pro Rails 🛤️
+
+A production-ready Rails 8 starter template I built for launching real-world web products. The goal: skip weeks of boilerplate setup on every new project and start building what actually matters.
+
+Every pattern is a deliberate choice, showing how authentication, authorization, real-time, background jobs, and UI components fit together in a clean, maintainable way. Designed for products with global users in mind.
+
+<br />
+## What's Inside 🔑
+* Authentication — Rodauth running as Rack middleware. Multi-phase login, email verification, password reset, magic links. No monkey-patching
+* Authorization — ActionPolicy with a custom RBAC system. Roles and permissions stored in DB, manageable at runtime
+* Admin Panel — "Adminit". No admin gem, no DSL. Just Rails controllers, views, and policies you can read and extend
+* Real-time — AnyCable (Go WebSocket server) + Hotwire. Far more concurrent connections at far lower memory than Action Cable
+* Background Jobs — Solid Queue backed by PostgreSQL. No Redis needed for jobs
+* UI Components — Fully custom ViewComponent library with a custom FormBuilder. Cards, badges, modals, form inputs, all previewed via Lookbook
+* Notifications — Noticed for multi-channel delivery (email + real-time Turbo Stream)
+* Support Tickets — Full ticket system with real-time chat between users and admins
+* Theming — 40 themes, 8 fonts. Users choose their own visual experience
+* Testing — RSpec + FactoryBot + Capybara/Cuprite running against real Chromium
+
+<br />
+## Stack 🧱
+* Frontend: Hotwire + TailwindCSS 4 + Propshaft. No webpack, no Node build step
+* Workflow: Interactors for orchestration. Models stay clean, controllers stay thin
+* Config: Anyway Config for typed configuration classes instead of scattered ENV calls
+* Code Quality: RuboCop + Standard + Brakeman + erb_lint
+* I18n: Wired up from the start, locale files organized by domain
+
+<br />
+
+[GitHub Repository](https://github.com/mattszein/pro-rails)
