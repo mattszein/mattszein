@@ -7,6 +7,8 @@ import { LinkList } from "@/app/ui/link_list";
 import { useStore } from "@/app/ui/stores/AppStoreProvider";
 import { useShallow } from "zustand/react/shallow";
 import { useHotkeys } from "react-hotkeys-hook";
+import FolderOpen from "@/app/ui/icons/FolderOpen";
+import ExplorerSearch from "@/app/ui/neovim/ExplorerSearch";
 
 export default function Tree() {
   const links = useRef<(HTMLAnchorElement | null)[]>([]);
@@ -35,13 +37,11 @@ export default function Tree() {
   useEffect(() => setSelected(neovimTreeLink), [neovimTreeLink])
 
   return (
-    <aside id="tree" className="overflow-y-auto border-r-2 border-zinc-600 hidden">
-      <nav className="w-72 text-white text-lg">
-        <div className="group flex items-center py-1">
-          <h1 className="text-lg text-cyan-100 font-semibold ml-4">Neo-tree</h1>
-        </div>
-        <div className="group flex items-center">
-          <h2 className="text-lg font-mono ml-4">~/work/projects/mattszein</h2>
+    <aside id="tree" className="overflow-y-auto border-r-1 border-stone-500 hidden">
+      <nav className="w-72 text-gruvbox-fg text-sm">
+        <ExplorerSearch />
+        <div className="px-2 group flex items-center">
+          <h2 className="group flex items-center space-x-2 hover:bg-gray-700 py-1"><FolderOpen className="h-4 text-blue-300" /><span className="text-gruvbox-green font-bold">mattszein</span></h2>
         </div>
 
         {LinkList.map((link, index) => (
@@ -49,24 +49,20 @@ export default function Tree() {
             key={index}
             ref={(el) => { links.current[index] = el }}
             className={clsx(
-              "group flex items-center space-x-2 hover:bg-gray-700 py-1",
-              { "px-2": link.level == 1 },
-              {
-                "bg-gray-800": index === getIndexLink && index !== selected,
-              },
-              { "bg-gray-700": index === selected },
+              "group flex items-center space-x-2 hover:bg-stone-700 py-1 px-4",
+              { "bg-stone-700": index === selected },
             )}
             href={link.href}
-          >
+          > |{link.level === 0 && "-"} {link.level === 1 && "|--"}
             <link.icon
-              className={clsx("group-hover:text-blue-400 ml-6", {
-                "ml-8": link.level === 1,
+              className={clsx("group-hover:text-stone-700 text-gruvbox-blue h-4", {
+                "ml-12": link.level === 1,
               })}
             />
-            <span>{link.title}</span>
+            <span className={clsx("font-bold", { "text-gruvbox-green": link.kind === "FOLDER" })}>{link.title}</span>
           </Link>
         ))}
       </nav>
-    </aside>
+    </aside >
   );
 }

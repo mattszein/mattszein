@@ -1,28 +1,15 @@
 'use client'
 
-import { useEffect, useState } from "react"
+import { useDateTime } from "@/app/ui/utils/useDateTime"
 
 const DateTime = () => {
-  const [dateTime, setDateTime] = useState<Date | null>(null)
-  useEffect(() => {
-    setDateTime(new Date())
-    setInterval(() => setDateTime(new Date()))
-  }, [])
+  const dateTime = useDateTime()
   return (
-    <p className="flex gap-2 hover:bg-zinc-700 hover:rounded-2xl py-1 px-3 m-1 cursor-default">
-      {dateTime ? (<>
-        <span>{new Intl.DateTimeFormat("en-US", {
-          month: "long",
-          day: "numeric",
-        }).format(dateTime)}
-        </span>
-        <span>{new Intl.DateTimeFormat("en-US", {
-          hour: "numeric",
-          minute: "numeric"
-        }).format(dateTime)}
-        </span></>) :
-        ("")}
-    </p>
+    <span className="basis-1/3 cursor-default rounded-[5px] bg-black px-2 py-0.5 text-[#8caaee] text-center">
+      {dateTime
+        ? `${String(dateTime.getDate()).padStart(2, "0")} - ${String(dateTime.getHours()).padStart(2, "0")}:${String(dateTime.getMinutes()).padStart(2, "0")}`
+        : ""}
+    </span>
   )
 }
 
