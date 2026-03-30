@@ -2,7 +2,7 @@
 import { useHotkeys } from "react-hotkeys-hook";
 import { useToggleTree } from "@/app/ui/neovim/Tree"
 import { Suspense, useEffect } from 'react'
-import { moveRight, moveLeft, moveWordBackward, moveWordForward, moveToFirstChar, moveToLastChar, moveToFirstTextNode, moveToLastTextNode, moveUp, moveDown } from "./Cursor";
+import { moveRight, moveLeft, moveWordBackward, moveWordForward, moveToFirstChar, moveToLastChar, moveToFirstTextNode, moveToLastTextNode, moveUp, moveDown } from "./cursor";
 
 function ShortcutsLoader() {
   const [isTree, toggle] = useToggleTree()

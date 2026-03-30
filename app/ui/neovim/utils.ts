@@ -1,4 +1,4 @@
-import { getTextContentSection } from "@/app/ui/utils/Cursor"
+import { getTextContentSection } from "@/app/ui/utils/dom"
 
 export const calculateLines = () => {
   const content = getTextContentSection()!
