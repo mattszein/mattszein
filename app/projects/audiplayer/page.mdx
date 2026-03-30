@@ -1,0 +1,37 @@
+# AudiPlayer 🎵
+
+A terminal music player written in Rust. Provider-agnostic, Vim-like interface, built with Ratatui and mpv as headless audio engine.
+
+My first vibe-coded app, born from late-night terminal sessions and a love for music. The architecture was desgined entirely by me.
+
+Status: In progress.
+<br />
+
+## How It Works 🔑
+
+* Provider system — Switch between Bandcamp, YouTube, and external providers. Add any music source via a JSON-over-stdin/stdout protocol
+* Vim-like interface — Normal, Insert, Command modes. hjkl navigation, gg/G, panel focus with Ctrl+h/l
+* Drill-down navigation — Browse into an artist to see albums, into an album to see tracks. Full history stack with breadcrumbs
+* Queue management — Add/replace single or all tracks, auto-advance, queue history
+* Search filters — Providers declare supported filters (All, Songs, Albums, Artists, Videos). Cycle with f/F
+* Library browsing — Press L to browse your saved playlists, albums, songs on authenticated providers
+
+<br />
+## Built-in Providers 🔌
+* Bandcamp — Native API. Authenticated collection browsing, artist discography, fast search
+* YouTube Music — External provider via ytmapi-rs. Authenticated search, artist/album browsing, library access
+
+<br />
+## Extensible by Design 🧩
+External providers are standalone binaries communicating via newline-delimited JSON. A shared SDK crate (audiplayer-provider-sdk) provides the ProviderHandler trait and dispatch loop. Drop a .toml manifest in ~/.config/audiplayer/providers/ and it appears on next launch.
+
+<br />
+## Features ⚡
+* Performance optimized — Background pre-fetching of stream URLs while scrolling. Concurrency control via semaphores
+* 9 built-in themes with dark/light mode support
+* Desktop notifications on track change
+* Layered config system via ~/.config/audiplayer/config.toml
+
+<br />
+
+[GitHub Repository](https://github.com/mattszein/audiplayer)

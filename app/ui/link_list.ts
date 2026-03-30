@@ -19,6 +19,25 @@ export const LinkList = [
   { href: "/training", title: "Training.tsx", icon: ReactIcon, level: 1 },
   { href: "", title: "/nexaworld", icon: FolderIcon, level: 0 },
   { href: "/nexaworld", title: "Manifesto.tsx", icon: ReactIcon, level: 1 },
+  { href: "", title: "/projects", icon: FolderIcon, level: 0 },
+  {
+    href: "/projects/pro_rails",
+    title: "ProRails.tsx",
+    icon: ReactIcon,
+    level: 1,
+  },
+  {
+    href: "/projects/devaiflow",
+    title: "DevAIFlow.tsx",
+    icon: ReactIcon,
+    level: 1,
+  },
+  {
+    href: "/projects/audiplayer",
+    title: "AudiPlayer.tsx",
+    icon: ReactIcon,
+    level: 1,
+  },
   { href: "/gitignore", title: ".gitignore", icon: IgnoreIcon, level: 0 },
   { href: "/", title: "Readme.md", icon: MdIcon, level: 0 },
 ];
