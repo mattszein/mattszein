@@ -11,6 +11,12 @@ import {
   isWhitespace,
 } from "./calculations";
 
+/**
+ * Calculates rightward cursor movement by one character
+ * Only moves within the current parent element (same HTML tag)
+ * Can't cross tags
+ * @returns NavigationResult indicating success and new offset, or boundary hit
+ */
 export const navigateRight = (): NavigationResult => {
   const context = getCursorContext();
   if (!context) return { success: false };
@@ -27,6 +33,12 @@ export const navigateRight = (): NavigationResult => {
   };
 };
 
+/**
+ * Calculates leftward cursor movement by one character
+ * Only moves within the current parent element (same HTML tag)
+ * Can't cross tags
+ * @returns NavigationResult indicating success and new offset, or boundary hit
+ */
 export const navigateLeft = (): NavigationResult => {
   const context = getCursorContext();
   if (!context) return { success: false };
@@ -43,6 +55,10 @@ export const navigateLeft = (): NavigationResult => {
   };
 };
 
+/**
+ * Calculates movement to the first character of the current element
+ * @returns NavigationResult with offset 0 (always succeeds)
+ */
 export const navigateToFirstChar = (): NavigationResult => {
   const context = getCursorContext();
   if (!context) return { success: false };
@@ -53,6 +69,10 @@ export const navigateToFirstChar = (): NavigationResult => {
   };
 };
 
+/**
+ * Calculates movement to the last character of the current element
+ * @returns NavigationResult with last valid offset (always succeeds)
+ */
 export const navigateToLastChar = (): NavigationResult => {
   const context = getCursorContext();
   if (!context) return { success: false };
@@ -64,6 +84,10 @@ export const navigateToLastChar = (): NavigationResult => {
   };
 };
 
+/**
+ * Calculates movement to the first text node from current position
+ * @returns NavigationResult with cross-tag movement to first node, or failure if already there
+ */
 export const navigateToFirstTextNode = (): NavigationResult => {
   const contentElement = getTextContentSection();
   if (!contentElement) return { success: false, atBoundary: 'start' };
@@ -92,6 +116,10 @@ export const navigateToFirstTextNode = (): NavigationResult => {
   return { success: false };
 };
 
+/**
+ * Calculates movement to the last text node from current position
+ * @returns NavigationResult with cross-tag movement to last node, or failure if already there
+ */
 export const navigateToLastTextNode = (): NavigationResult => {
   const contentElement = getTextContentSection();
   if (!contentElement) return { success: false, atBoundary: 'end' };
@@ -129,6 +157,12 @@ export const navigateToLastTextNode = (): NavigationResult => {
   return { success: false };
 };
 
+/**
+ * Calculates vim-style forward word movement
+ * Skips current word characters, then whitespace, to land on next word start
+ * Can cross tags if end of current parent is reached
+ * @returns NavigationResult with new offset or cross-tag target
+ */
 export const navigateWordForward = (): NavigationResult => {
   const context = getCursorContext();
   if (!context) return { success: false };
@@ -172,6 +206,12 @@ export const navigateWordForward = (): NavigationResult => {
   return { success: false, atBoundary: 'end' };
 };
 
+/**
+ * Calculates vim-style backward word movement
+ * Scans backwards past whitespace, then to the beginning of the current word
+ * Can cross tags if start of current parent is reached
+ * @returns NavigationResult with new offset or cross-tag target
+ */
 export const navigateWordBackward = (): NavigationResult => {
   const context = getCursorContext();
   if (!context) return { success: false };
@@ -219,6 +259,12 @@ export const navigateWordBackward = (): NavigationResult => {
   };
 };
 
+/**
+ * Calculates upward cursor movement (previous visual line)
+ * Handles line wrapping within the same tag, or crosses to previous tag
+ * Preserves column position when possible, adjusting for leading spaces
+ * @returns NavigationResult with new offset, potentially cross-tag
+ */
 export const navigateUp = (): NavigationResult => {
   const current = getCurrentLinePosition();
   if (!current) return { success: false };
@@ -285,6 +331,12 @@ export const navigateUp = (): NavigationResult => {
   }
 };
 
+/**
+ * Calculates downward cursor movement (next visual line)
+ * Handles line wrapping within the same tag, or crosses to next tag
+ * Preserves column position when possible, adjusting for leading spaces
+ * @returns NavigationResult with new offset, potentially cross-tag
+ */
 export const navigateDown = (): NavigationResult => {
   const current = getCurrentLinePosition();
   if (!current) return { success: false };

@@ -21,6 +21,9 @@ import {
   navigateToLastTextNode,
 } from "./navigation";
 
+/**
+ * Removes the current cursor from the DOM and merges its character back into the text
+ */
 const cleanCursor = () => {
   const existingCursor = getCursorElement();
   if (!existingCursor) return;
@@ -46,6 +49,12 @@ const cleanCursor = () => {
   parent.removeChild(existingCursor);
 }
 
+/**
+ * Applies the cursor to a specific position within a text node
+ * Splits the text node at the cursor position and inserts the cursor span
+ * Also adds styling to the parent element to highlight the current line
+ * @param position - Object containing the target text node and character offset
+ */
 export const applyCursorPosition = (position: CursorPosition): void => {
   const { textNode, offset } = position;
   const text = textNode.textContent || '';
@@ -73,6 +82,13 @@ export const applyCursorPosition = (position: CursorPosition): void => {
   if (!isVisible) cursorSpan.scrollIntoView({ block: "end" })
 };
 
+/**
+ * Handles cursor movement across different HTML elements (cross-tag movement)
+ * First cleans up the current cursor position by merging text fragments
+ * Then applies the cursor to the new target text node at the specified offset
+ * @param targetTextNode - The destination text node for the cursor
+ * @param newOffset - The character position within the target node
+ */
 const applyCursorCrossTag = (targetTextNode: Text, newOffset: number): void => {
   const cursorSpan = getCursorElement();
   if (cursorSpan && cursorSpan.parentNode) {
@@ -111,6 +127,12 @@ const applyCursorCrossTag = (targetTextNode: Text, newOffset: number): void => {
   });
 };
 
+/**
+ * Applies cursor position within the same parent element
+ * Used for navigation within the same HTML tag
+ * Merges all text nodes and cursor content, then repositions cursor at new offset
+ * @param newOffset - The new character position within the merged text
+ */
 const applyCursorWithMergedText = (newOffset: number): void => {
   const cursorSpan = getCursorElement();
   if (!cursorSpan || !cursorSpan.parentNode) return;
@@ -146,6 +168,9 @@ const applyCursorWithMergedText = (newOffset: number): void => {
   });
 };
 
+/**
+ * Initializes the cursor by positioning it at the first character of the content
+ */
 export const wrapFirstLetter = (): void => {
   const contentElement = getTextContentSection();
   if (!contentElement) {
@@ -165,8 +190,11 @@ export const wrapFirstLetter = (): void => {
   }
 }
 
-// Movement functions that apply navigation results to the DOM
-
+/**
+ * Applies a NavigationResult to the DOM by moving the cursor accordingly
+ * Handles both same-parent and cross-tag movements
+ * @param result - The navigation result to apply
+ */
 const applyNavigationResult = (result: ReturnType<typeof navigateRight>): void => {
   if (result.success && result.newOffset !== undefined) {
     if (result.crossTag && result.targetTextNode) {
