@@ -9,7 +9,7 @@ const Line = () => {
     <p key={index}>{index + 1}</p>
   ));
 
-  return <div className="h-full text-right  snap-align-none">
+  return <div className="h-full text-right snap-align-none pl-2">
     {lines ? items(lines) : null}
   </div>
 }

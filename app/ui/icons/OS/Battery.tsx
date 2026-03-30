@@ -16,7 +16,7 @@ const Battery = () => {
         <path
           d="m 42,497.3639 v 1 h -3 c 0,0 0,0.446 0,1 v 11 c 0,0.554 0.446,1 1,1 h 8 c 0.554,0 1,-0.446 1,-1 v -11 c 0,-0.554 0,-1 0,-1 h -3 v -1 z m 2,4 v 3 h 3 l -3,5 v -3 h -3 z"
           id="path6748"
-          fill="#fff"
+          fill="currentColor"
           fillOpacity="1"
           stroke="none"
         />

@@ -1,6 +1,6 @@
 # mattszein.com
 
-Personal website that simulates a Pop!_OS Linux desktop with Neovim (LazyVim) open. Instead of clicking, visitors navigate content using vim-style keyboard bindings — `h/j/k/l`, `w/b`, `0/$`, `g/G` — with a blinking cursor that moves through the text.
+Personal website that simulates a Linux desktop with Neovim (LazyVim) open. Instead of clicking, visitors navigate content using vim-style keyboard bindings — `h/j/k/l`, `w/b`, `0/$`, `g/G` — with a blinking cursor that moves through the text.
 
 ## Tech Stack
 
