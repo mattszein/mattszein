@@ -4,7 +4,6 @@ import './globals.css'
 import { AppStoreProvider } from "@/app/ui/stores/AppStoreProvider";
 import Window from "@/app/ui/Window";
 import Neovim from "@/app/ui/neovim/Neovim";
-import Alacritty from "@/app/ui/apps/terminal/Alacritty";
 import NavigationEvents from "@/app/ui/utils/NavigationEvents"
 import Shortcuts from "./ui/utils/Shortcuts";
 import WindowOS from "./ui/OS/WindowOS";

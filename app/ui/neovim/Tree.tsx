@@ -1,6 +1,5 @@
 "use client";
-import { useState, useRef, useEffect, useMemo } from "react";
-import { usePathname } from "next/navigation";
+import { useState, useRef, useEffect } from "react";
 import { LinkList, LinkKind } from "@/app/ui/link_list";
 import { useStore } from "@/app/ui/stores/AppStoreProvider";
 import { useShallow } from "zustand/react/shallow";
@@ -17,7 +16,7 @@ export default function Tree() {
   const [isNeovimTree, neovimTreeLink] = useStore(
     useShallow((state) => [state.isNeovimTree, state.neovimTreeLink]),
   );
-  const [windowFocus, setWindowFocus, checkFocus] = useWindow();
+  const [, , checkFocus] = useWindow();
   const [selected, setSelected] = useState(neovimTreeLink);
 
   useHotkeys("j", () => changeLink(1), { enabled: checkFocus(WINDOW_APPS.NVIM) && isNeovimTree });

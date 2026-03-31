@@ -8,7 +8,7 @@ import { useWindow } from '@/app/ui/utils/hooks/window'
 
 function ShortcutsLoader() {
   const [isTree, toggle] = useToggleTree();
-  const [windowFocus, setWindowFocus, checkFocus] = useWindow();
+  const [, , checkFocus] = useWindow();
   const treeEnabled = () => !isTree && !!checkFocus(WINDOW_APPS.NVIM);
   useHotkeys("space+e", () => toggle(), { enabled: !!checkFocus(WINDOW_APPS.NVIM) });
   useHotkeys(['l', 'ArrowRight'], moveRight, { enabled: treeEnabled() });

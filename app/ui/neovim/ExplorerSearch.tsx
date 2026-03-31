@@ -1,8 +1,5 @@
 'use client'
-import { useState } from 'react';
-
 const ExplorerSearch = () => {
-  const [query, setQuery] = useState('');
 
   return (
     <div className="relative px-1 font-mono text-sm w-full max-w-2xl flex">
