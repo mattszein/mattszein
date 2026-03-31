@@ -41,7 +41,7 @@ export default function Tree() {
       <nav className="w-72 text-gruvbox-fg text-sm">
         <ExplorerSearch />
         <div className="px-2 group flex items-center">
-          <h2 className="group flex items-center space-x-2 hover:bg-gray-700 py-1"><FolderOpen className="h-4 text-blue-300" /><span className="text-gruvbox-green font-bold">mattszein</span></h2>
+          <h2 className="group flex items-center space-x-2 hover:bg-gray-700 py-1"><FolderOpen className="h-4 text-gruvbox-blue" /><span className="text-gruvbox-green font-bold">mattszein</span></h2>
         </div>
 
         {LinkList.map((link, index) => (
