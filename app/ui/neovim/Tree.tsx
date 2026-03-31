@@ -23,10 +23,14 @@ export default function Tree() {
   useHotkeys("k", () => changeLink(-1), { enabled: checkFocus(WINDOW_APPS.NVIM) && isNeovimTree });
 
   const changeLink = (number: number) => {
-    if (selected + number >= 0 && selected + number < LinkList.length) {
-      // Focus if it's a file (A element)
-      links.current[selected + number]?.focus();
-      setSelected(selected + number);
+    const next = selected + number;
+    if (next >= 0 && next < LinkList.length) {
+      if (links.current[next]) {
+        links.current[next]?.focus();
+      } else {
+        (document.activeElement as HTMLElement)?.blur();
+      }
+      setSelected(next);
     }
   };
 
