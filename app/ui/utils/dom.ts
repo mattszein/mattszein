@@ -1,5 +1,12 @@
 import { NVIM_CONTENT, NVIM_TEXT_CONTENT, CURRENT_CURSOR } from "./types";
 
+export const calculateLines = () => {
+  const content = getTextContentSection()!
+  const styles = getComputedStyle(content)
+  const lineHeight = parseInt(styles.lineHeight);
+  return content.scrollHeight / lineHeight
+}
+
 export const getContentSection = () => document.getElementById(NVIM_CONTENT)
 
 /**

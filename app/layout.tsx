@@ -2,11 +2,14 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import './globals.css'
 import { AppStoreProvider } from "@/app/ui/stores/AppStoreProvider";
-import Terminal from "./ui/Terminal";
+import Window from "@/app/ui/Window";
+import Neovim from "@/app/ui/neovim/Neovim";
+import Alacritty from "@/app/ui/apps/terminal/Alacritty";
 import NavigationEvents from "@/app/ui/utils/NavigationEvents"
 import Shortcuts from "./ui/utils/Shortcuts";
 import WindowOS from "./ui/OS/WindowOS";
 import BarOS from "./ui/OS/BarOS";
+import { WINDOW_APPS } from '@/app/lib/stores/slices/Window';
 
 const cousineFont = localFont({
   src: "./fonts/Cousine-Regular.woff",
@@ -32,7 +35,7 @@ export default function RootLayout({
           <Shortcuts />
           <WindowOS>
             <BarOS />
-            <Terminal>{children}</Terminal>
+            <Window name={WINDOW_APPS.NVIM}><Neovim>{children}</Neovim></Window>
           </WindowOS>
         </body>
       </AppStoreProvider>

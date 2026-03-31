@@ -1,15 +1,16 @@
-import Tree from "@/app/ui/Tree";
+// app/ui/apps/Neovim.tsx
+import Tree from "@/app/ui/neovim/Tree";
 import Line from "@/app/ui/neovim/Line";
 import BottomStatusLine from "@/app/ui/neovim/BottomStatusLine";
-import { NVIM_CONTENT, NVIM_TEXT_CONTENT } from "@/app/ui/utils/types"
+import { NVIM_CONTENT, NVIM_TEXT_CONTENT } from "@/app/ui/utils/types";
 
-export default function Terminal({
+export default function Neovim({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <div className="flex flex-col flex-1 bg-neutral-800 text-gruvbox-fg overflow-hidden snap-align-none rounded-lg m-1 border-2 border-sky-500">
+    <div className="flex flex-col h-full w-full bg-neutral-800 text-gruvbox-fg">
       <main className="flex flex-1 overflow-hidden snap-align-none font-mono text-md">
         <Tree />
         <section className="flex flex-1 overflow-auto no-scrollbar snap-align-none gap-6 break-words break-normal" id={NVIM_CONTENT}>
@@ -20,6 +21,6 @@ export default function Terminal({
         </section>
       </main>
       <BottomStatusLine />
-    </div >
+    </div>
   );
 }

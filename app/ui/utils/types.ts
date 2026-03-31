@@ -2,7 +2,6 @@ export const NVIM_CONTENT = 'nvim-content'
 export const NVIM_TEXT_CONTENT = 'nvim-text-content'
 export const CURRENT_CURSOR = 'cursor-text'
 
-// Types
 export interface CursorPosition {
   textNode: Text;
   offset: number;
@@ -23,7 +22,7 @@ export interface CursorContext {
   cursorChar: string;
   currentPosition: number;
   mergedText: string;
-  mergedGraphemes: string[];    // grapheme array (new)
+  mergedGraphemes: string[];
   totalLength: number;
 }
 
@@ -39,7 +38,6 @@ export interface LinePosition {
   metrics: LayoutMetrics;
 }
 
-// Add these new interfaces to your existing ones
 export interface LineInfo {
   startOffset: number;
   endOffset: number;
