@@ -1,19 +1,21 @@
 # DevAIFlow 🤖
 Your flow. Your code. Your infrastructure.
 
-AI coding tools want you inside their cloud, their context window, their workflow. You become a consumer of someone else's system. DevAIFlow starts from a different premise: *you* define what the AI does, in what order, with what tools, and where humans decide. Everything runs on your infrastructure, with your data.
+AI coding tools want you inside their cloud, their context window, their workflow. You become a consumer of someone else's system. DevAIFlow starts from a different premise: you define what the AI does, in what order, with what tools, and where humans decide. Everything runs on your infrastructure, with your data.
 
 Status: Actively building. The execution layer (isolated environments, agent containers, host daemon) is working. Currently building the MCP bridge, the orchestrator, and the web UI.
+<br />
+devkitd: [GitHub Repository: https://github.com/devaiflow/devkitd](https://github.com/devaiflow/devkitd)
 <br />
 
 ## What It Looks Like 🎬
 You're working on a Rails app. You have an idea — AI-generated avatars on signup. Here's how it flows:
 
-* **You send a message**: WhatsApp, Signal, email, or the web UI. *"I want AI avatar generation when a user creates an account in pro-rails."*
-* **The orchestrator kicks off a brainstorming flow.** Multiple agents research approaches, debate trade-offs, produce a structured proposal. You get an email and a notification in DevAIFlow.
-* **You review from wherever you are.** Approve, reject, or ask for changes — from your phone, your inbox, or the dashboard. The agents revise until you're satisfied.
-* **You approve. The coding flow starts.** An agent plans the implementation. You review the plan. It codes in an isolated environment: a full copy of your app with its own database, accessible via a private URL so you can see changes live. It opens a PR.
-* **You review the PR, request changes, approve.** Every iteration is logged. Every agent output is captured. When you merge, the feature is done.
+-> You send a message: WhatsApp, Signal, email, or the web UI. "I want AI avatar generation when a user creates an account in pro-rails."
+-> The orchestrator kicks off a brainstorming flow. Multiple agents research approaches, debate trade-offs, produce a structured proposal. You get an email and a notification in DevAIFlow.
+-> You review from wherever you are. Approve, reject, or ask for changes — from your phone, your inbox, or the dashboard. The agents revise until you're satisfied.
+-> You approve. The coding flow starts. An agent plans the implementation. You review the plan. It codes in an isolated environment: a full copy of your app with its own database, accessible via a private URL so you can see changes live. It opens a PR.
+-> You review the PR, request changes, approve. Every iteration is logged. Every agent output is captured. When you merge, the feature is done.
 
 The key: at no point did you leave your own infrastructure. The agents ran in containers you control. The flow was a YAML file in your repo. The logs are yours to query, analyze, and use to improve future runs.
 <br />
@@ -21,9 +23,9 @@ The key: at no point did you leave your own infrastructure. The agents ran in co
 ## How It's Built 🧱
 Three concerns, cleanly separated:
 
-* **Flow definitions**: YAML files versioned in your repo. Each step declares its agent, skill, inputs/outputs, and whether it requires human approval. Swap Claude for Gemini for a local model without changing the flow. Provider-agnostic by design.
-* **Execution layer**: Isolated environments per feature branch: dedicated containers, scoped Docker access, private URLs via Tailscale. A privileged daemon (`devkitd`) is the only component with host permissions — agents talk to it through a controlled interface, never directly to the host. Multiple features run in parallel without interference.
-* **Orchestration & UI**: The orchestrator reads flows, manages execution order, handles human approval gates, and captures everything: tokens, costs, timestamps, agent output, approval state. The web UI gives you a flow builder, real-time dashboard, approval inbox, and project chat. A window into your system, not a replacement for it.
+-> Flow definitions: YAML files versioned in your repo. Each step declares its agent, skill, inputs/outputs, and whether it requires human approval. Swap Claude for Gemini for a local model without changing the flow. Provider-agnostic by design.
+-> Execution layer: Isolated environments per feature branch: dedicated containers, scoped Docker access, private URLs via Tailscale. A privileged daemon -devkitd- is the only component with host permissions — agents talk to it through a controlled interface, never directly to the host. Multiple features run in parallel without interference.
+-> Orchestration & UI: The orchestrator reads flows, manages execution order, handles human approval gates, and captures everything: tokens, costs, timestamps, agent output, approval state. The web UI gives you a flow builder, real-time dashboard, approval inbox, and project chat. A window into your system, not a replacement for it.
 <br />
 
 ## Where It's Going 🔭
@@ -33,9 +35,9 @@ The communication layer (WhatsApp, Signal, Slack, email) makes the system ambien
 <br />
 
 ## Design Principles ⚡
-* **You own the data.** Every execution log stored where you configure it.
-* **You own the flow.** YAML in your repo, not locked in a vendor database.
-* **Provider-agnostic.** Local models are first-class citizens.
-* **Humans decide what matters.** Approval gates are built into the flow, not bolted on.
-* **Boring work should be automated.** Spend your time on judgment, not mechanics.
+-> You own the data. Every execution log stored where you configure it.
+-> You own the flow. YAML in your repo, not locked in a vendor database.
+-> Provider-agnostic. Local models are first-class citizens.
+-> Humans decide what matters. Approval gates are built into the flow, not bolted on.
+-> Boring work should be automated. Spend your time on judgment, not mechanics.
 <br />
