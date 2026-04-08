@@ -1,32 +1,41 @@
 # DevAIFlow 🤖
+Your flow. Your code. Your infrastructure.
 
-Your flow. Your code.
+AI coding tools want you inside their cloud, their context window, their workflow. You become a consumer of someone else's system. DevAIFlow starts from a different premise: *you* define what the AI does, in what order, with what tools, and where humans decide. Everything runs on your infrastructure, with your data.
 
-AI coding assistants are useful, but the industry wants you to run everything through their cloud, their context, their workflow. You become a user of someone else's tool instead of an engineer who controls their own system. DevAIFlow starts from a different premise: you define what the AI does, in what order, with what tools, and with what human checkpoints: All on your infrastructure, with your data.
-
-Status: In progress.
+Status: Actively building. The execution layer (isolated environments, agent containers, host daemon) is working. Currently building the MCP bridge, the orchestrator, and the web UI.
 <br />
 
-## Three Layers 🧱
+## What It Looks Like 🎬
+You're working on a Rails app. You have an idea — AI-generated avatars on signup. Here's how it flows:
 
-* FlowSpec: A universal standard for AI agent pipelines. Flow definitions in YAML, versioned in your repo. Steps declare their agent, skill, input/output, and whether they need human approval.
-* DevKit: A Server tooling for isolated execution. Environments per feature, ephemeral agent containers, scoped Docker proxy so the AI can interact with its own environment but nothing else. Multiple agents run in parallel without interference. An orchestration layer that manages flow execution, human approvals, and logging.
-* Platform: Web UI that connects to your own server. Project management, flow builder, real-time execution dashboard, approval inbox, and project chat. It's a window into your system.
+* **You send a message**: WhatsApp, Signal, email, or the web UI. *"I want AI avatar generation when a user creates an account in pro-rails."*
+* **The orchestrator kicks off a brainstorming flow.** Multiple agents research approaches, debate trade-offs, produce a structured proposal. You get an email and a notification in DevAIFlow.
+* **You review from wherever you are.** Approve, reject, or ask for changes — from your phone, your inbox, or the dashboard. The agents revise until you're satisfied.
+* **You approve. The coding flow starts.** An agent plans the implementation. You review the plan. It codes in an isolated environment: a full copy of your app with its own database, accessible via a private URL so you can see changes live. It opens a PR.
+* **You review the PR, request changes, approve.** Every iteration is logged. Every agent output is captured. When you merge, the feature is done.
 
+The key: at no point did you leave your own infrastructure. The agents ran in containers you control. The flow was a YAML file in your repo. The logs are yours to query, analyze, and use to improve future runs.
 <br />
-## How It Works 🔑
-* Define a flow in YAML: plan → review → implement → test, with human approval gates at any step.
-* The orchestrator reads the flow, executes steps in order. For each step, it spins up a container with the declared agent and skill, feeds it the input, and captures the output.
-* Coding Agents executed in their specific environment. Swap Gemini for Claude for a local model without changing the flow.
-* Human loops are first-class. The AI proposes, you review from the web UI or your phone via Signal/Slack, you decide.
-* Every run captures: tokens, costs, timestamps, agent output, approval state. Your data, queryable when you need it.
-* Every Agent log is then processed to get hints on how to improve the flow, the prompts, or the agents themselves. It's a feedback loop for continuous improvement.
 
+## How It's Built 🧱
+Three concerns, cleanly separated:
+
+* **Flow definitions**: YAML files versioned in your repo. Each step declares its agent, skill, inputs/outputs, and whether it requires human approval. Swap Claude for Gemini for a local model without changing the flow. Provider-agnostic by design.
+* **Execution layer**: Isolated environments per feature branch: dedicated containers, scoped Docker access, private URLs via Tailscale. A privileged daemon (`devkitd`) is the only component with host permissions — agents talk to it through a controlled interface, never directly to the host. Multiple features run in parallel without interference.
+* **Orchestration & UI**: The orchestrator reads flows, manages execution order, handles human approval gates, and captures everything: tokens, costs, timestamps, agent output, approval state. The web UI gives you a flow builder, real-time dashboard, approval inbox, and project chat. A window into your system, not a replacement for it.
 <br />
+
+## Where It's Going 🔭
+The feedback loop is the endgame. Every agent run produces logs. Those logs get processed to surface patterns: which prompts work, which agents perform better for which tasks, where flows bottleneck. DevAIFlow doesn't just run agents — it learns how to run them better over time.
+
+The communication layer (WhatsApp, Signal, Slack, email) makes the system ambient. You don't need to sit at a terminal. The AI works, you get notified, you decide, the AI continues. Engineering becomes asynchronous collaboration between you and your agents.
+<br />
+
 ## Design Principles ⚡
-* You own the data: Every execution log stored where you configure it.
-* You own the flow: YAML files in your repo, not locked in a vendor's database.
-* Provider agnostic: local models are first-class citizens.
-* Boring tasks should be boring: delegate the mechanical parts, spend time on what requires judgment.
-
+* **You own the data.** Every execution log stored where you configure it.
+* **You own the flow.** YAML in your repo, not locked in a vendor database.
+* **Provider-agnostic.** Local models are first-class citizens.
+* **Humans decide what matters.** Approval gates are built into the flow, not bolted on.
+* **Boring work should be automated.** Spend your time on judgment, not mechanics.
 <br />
