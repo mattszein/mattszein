@@ -1,12 +1,15 @@
 # DevAIFlow 🤖
-Your flow. Your code. Your infrastructure.
-
-AI coding tools want you inside their cloud, their context window, their workflow. You become a consumer of someone else's system. DevAIFlow starts from a different premise: you define what the AI does, in what order, with what tools, and where humans decide. Everything runs on your infrastructure, with your data.
-
-Status: Actively building. The execution layer (isolated environments, agent containers, host daemon) is working. Currently building the MCP bridge, the orchestrator, and the web UI.
+Your flow. Your code. And Your infrastructure.
 <br />
-[GitHub Repository: https://github.com/devaiflow/devkitd](https://github.com/devaiflow/devkitd)
+Something quietly changed in software development over the last two years, and most developers haven't fully articulated what it feels like. It's not that AI got good at writing code—it did, and that's genuinely useful. It's that the industry moved fast to capture that moment. Every major platform rushed to wrap AI behind a subscription, a proprietary API, a cloud-only service, or a closed IDE extension. The message, underneath all the productivity marketing, is consistent: Let us run the AI for you. Give us your context, your codebase, your workflow. We'll handle it.
+
+And developers, under pressure from their companies to "adopt AI" and ship faster, largely went along with it.
 <br />
+I believe the problem isn't the AI, is who owns the loop.
+<br />
+Today, almost every AI coding tool wants to lock you inside their cloud. They draw you in with a frictionless free tier, but eventually, the bill hits. By then, you are trapped in their context window, their workflow, and their flaws. You’ve gone from being an engineer building systems to a consumer of someone else's black box.
+<br />
+DevAIFlow was built as the antidote to this. It starts from a fundamentally different premise: you define what the AI does, in what order, with which tools, and exactly where humans step in to decide. Everything runs on your infrastructure, with your data, on your terms.
 
 ## What It Looks Like 🎬
 
@@ -33,6 +36,11 @@ Three concerns, cleanly separated:
 -> Execution layer: Isolated environments per feature branch: dedicated containers, scoped Docker access, private URLs via Tailscale. A privileged daemon -devkitd- is the only component with host permissions — agents talk to it through a controlled interface, never directly to the host. Multiple features run in parallel without interference.
 
 -> Orchestration & UI: The orchestrator reads flows, manages execution order, handles human approval gates, and captures everything: tokens, costs, timestamps, agent output, approval state. The web UI gives you a flow builder, real-time dashboard, approval inbox, and project chat. A window into your system, not a replacement for it.
+<br />
+
+Status: Actively building. The execution layer (isolated environments, agent containers, host daemon) is working. Currently building the MCP bridge, the orchestrator, and the web UI.
+<br />
+[GitHub Repository: https://github.com/devaiflow/devkitd](https://github.com/devaiflow/devkitd)
 <br />
 
 ## Where It's Going 🔭
