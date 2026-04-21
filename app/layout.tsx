@@ -4,6 +4,7 @@ import './globals.css'
 import { AppStoreProvider } from "@/app/lib/store/provider";
 import Window from "@/app/ui/Window";
 import Neovim from "@/app/ui/neovim/Neovim";
+import Terminal from "@/app/ui/apps/terminal/Terminal";
 import NavigationEvents from "@/app/ui/system/NavigationEvents"
 import Shortcuts from "@/app/ui/system/Shortcuts";
 import WindowOS from "./ui/os/WindowOS";
@@ -34,7 +35,8 @@ export default function RootLayout({
           <Shortcuts />
           <WindowOS>
             <BarOS />
-            <Window name={WINDOW_APPS.NVIM}><Neovim>{children}</Neovim></Window>
+            <Window name={WINDOW_APPS.NVIM} workspace={1}><Neovim>{children}</Neovim></Window>
+            <Window name={WINDOW_APPS.TERMINAL} workspace={2}><Terminal /></Window>
           </WindowOS>
         </AppStoreProvider>
       </body>
