@@ -1,8 +1,8 @@
 "use client"
 import clsx from "clsx";
-import { useStore } from "@/app/ui/stores/AppStoreProvider";
+import { useStore } from "@/app/lib/store/provider";
 import { useShallow } from "zustand/react/shallow";
-import { WindowFocusType } from '@/app/lib/stores/slices/Window';
+import { WindowFocusType } from '@/app/lib/store/slices/window';
 
 const Window = ({
   children,

@@ -1,12 +1,12 @@
-import DateTime from "@/app/ui/OS/DateTime"
-import Volume from "@/app/ui/icons/OS/Volume"
-import Battery from "@/app/ui/icons/OS/Battery"
-import Wifi from "@/app/ui/icons/OS/Wifi"
-import Bluetooth from "@/app/ui/icons/OS/Bluetooth"
-import Temperature from "@/app/ui/icons/OS/Temperature"
-import Cpu from "@/app/ui/icons/OS/Cpu"
-import Memory from "@/app/ui/icons/OS/Memory"
-import Lock from "@/app/ui/icons/OS/Lock"
+import DateTime from "@/app/ui/os/DateTime"
+import Volume from "@/app/ui/icons/os/Volume"
+import Battery from "@/app/ui/icons/os/Battery"
+import Wifi from "@/app/ui/icons/os/Wifi"
+import Bluetooth from "@/app/ui/icons/os/Bluetooth"
+import Temperature from "@/app/ui/icons/os/Temperature"
+import Cpu from "@/app/ui/icons/os/Cpu"
+import Memory from "@/app/ui/icons/os/Memory"
+import Lock from "@/app/ui/icons/os/Lock"
 
 const BarOS = () => {
   const workspaces = [1, 2, 3, 4]

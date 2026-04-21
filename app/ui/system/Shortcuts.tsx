@@ -1,9 +1,9 @@
 "use client";
 import { useHotkeys } from "react-hotkeys-hook";
-import { useToggleTree } from "@/app/ui/utils/hooks/TreeHook"
+import { useToggleTree } from "@/app/ui/utils/hooks/useTree"
 import { Suspense, useEffect } from 'react'
-import { WINDOW_APPS } from '@/app/lib/stores/slices/Window';
-import { moveRight, moveLeft, moveWordBackward, moveWordForward, moveToFirstChar, moveToLastChar, moveToFirstTextNode, moveToLastTextNode, moveUp, moveDown } from "./cursor";
+import { WINDOW_APPS } from '@/app/lib/store/slices/window';
+import { moveRight, moveLeft, moveWordBackward, moveWordForward, moveToFirstChar, moveToLastChar, moveToFirstTextNode, moveToLastTextNode, moveUp, moveDown } from "@/app/lib/cursor-engine";
 import { useWindow } from '@/app/ui/utils/hooks/window'
 
 function ShortcutsLoader() {
@@ -26,14 +26,15 @@ function ShortcutsLoader() {
   return <></>
 }
 
+const NAV_KEYS = new Set([' ', 'ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight']);
+
 const Shortcuts = () => {
   useEffect(() => {
-    window.addEventListener('keydown', function (e) {
-      if (e.key == ' ' || e.key == 'ArrowDown' || e.key == 'ArrowRight' || e.key == 'ArrowUp' || e.key == 'ArrowLeft' && e.target == document.body) {
+    window.addEventListener('keydown', (e) => {
+      if (NAV_KEYS.has(e.key) && e.target === document.body) {
         e.preventDefault();
       }
     });
-
   }, [])
   return <Suspense><ShortcutsLoader /></Suspense>
 };

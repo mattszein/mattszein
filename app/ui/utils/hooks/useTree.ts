@@ -1,6 +1,6 @@
 "use client"
 
-import { useStore } from "@/app/ui/stores/AppStoreProvider";
+import { useStore } from "@/app/lib/store/provider";
 import { useShallow } from "zustand/react/shallow";
 
 export const useToggleTree = (): [boolean, () => void] => {
