@@ -1,8 +1,7 @@
-// app/ui/apps/Neovim.tsx
 import Tree from "@/app/ui/neovim/Tree";
 import Line from "@/app/ui/neovim/Line";
 import BottomStatusLine from "@/app/ui/neovim/BottomStatusLine";
-import { NVIM_CONTENT, NVIM_TEXT_CONTENT } from "@/app/ui/utils/types";
+import { NVIM_CONTENT, NVIM_TEXT_CONTENT } from "@/app/lib/cursor-engine";
 
 export default function Neovim({
   children,

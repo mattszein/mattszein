@@ -1,8 +1,8 @@
 "use client"
 
-import { useStore } from "@/app/ui/stores/AppStoreProvider";
+import { useStore } from "@/app/lib/store/provider";
 import { useShallow } from "zustand/react/shallow";
-import { WindowFocusType } from '@/app/lib/stores/slices/Window';
+import { WindowFocusType } from '@/app/lib/store/slices/window';
 
 export const useWindow = (): [WindowFocusType, (focus: WindowFocusType) => void, (focus: WindowFocusType) => boolean] => {
   const [windowFocus, setWindowFocus] = useStore(

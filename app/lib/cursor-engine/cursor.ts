@@ -174,7 +174,7 @@ const applyCursorWithMergedText = (newOffset: number): void => {
 export const wrapFirstLetter = (): void => {
   const contentElement = getTextContentSection();
   if (!contentElement) {
-    console.log("Element with id 'terminal-content' not found");
+    console.warn("nvim-text-content element not found");
     return;
   }
   const walker = createTextWalker(contentElement);

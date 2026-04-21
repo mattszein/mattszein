@@ -1,5 +1,5 @@
 import { StateCreator } from "zustand/vanilla";
-import { Store } from "../store";
+import { Store } from "..";
 import { StoreState } from "../defaultState";
 
 type NeovimFocusType = 'content' | "tree" | null

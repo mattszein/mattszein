@@ -3,9 +3,9 @@
 import Clock from "@/app/ui/icons/nvim/Clock";
 import Cube from "@/app/ui/icons/nvim/Cube";
 import { useDateTime } from "@/app/ui/utils/useDateTime";
-import { useStore } from "@/app/ui/stores/AppStoreProvider";
+import { useStore } from "@/app/lib/store/provider";
 import { useShallow } from "zustand/react/shallow";
-import { LinkList } from "@/app/ui/link_list";
+import { LinkList } from "@/app/ui/linkList";
 
 const BottomStatusLine = () => {
   const dateTime = useDateTime();

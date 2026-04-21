@@ -1,12 +1,12 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import { LinkList, LinkKind } from "@/app/ui/link_list";
-import { useStore } from "@/app/ui/stores/AppStoreProvider";
+import { LinkList, LinkKind } from "@/app/ui/linkList";
+import { useStore } from "@/app/lib/store/provider";
 import { useShallow } from "zustand/react/shallow";
 import { useHotkeys } from "react-hotkeys-hook";
 import FolderOpen from "@/app/ui/icons/FolderOpen";
 import ExplorerSearch from "@/app/ui/neovim/ExplorerSearch";
-import { WINDOW_APPS } from '@/app/lib/stores/slices/Window';
+import { WINDOW_APPS } from '@/app/lib/store/slices/window';
 import { useWindow } from '@/app/ui/utils/hooks/window'
 import File from "./File";
 import Folder from "./Folder";

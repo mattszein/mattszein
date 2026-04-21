@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import clsx from "clsx";
-import { LinkItem, FileIcons } from "@/app/ui/link_list";
+import { LinkItem, FileIcons } from "@/app/ui/linkList";
 
 interface FileProps {
   link: LinkItem;

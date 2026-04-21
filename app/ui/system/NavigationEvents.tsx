@@ -1,13 +1,12 @@
 "use client";
 import { useEffect } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useStore } from "@/app/ui/stores/AppStoreProvider";
+import { useStore } from "@/app/lib/store/provider";
 import { useShallow } from "zustand/react/shallow";
-import { LinkList } from "@/app/ui/link_list";
+import { LinkList } from "@/app/ui/linkList";
 import { Suspense } from 'react'
-import { wrapFirstLetter } from "./cursor";
-import { useToggleTree } from "@/app/ui/utils/hooks/TreeHook"
-import { calculateLines } from "@/app/ui/utils/dom";
+import { wrapFirstLetter, calculateLines } from "@/app/lib/cursor-engine";
+import { useToggleTree } from "@/app/ui/utils/hooks/useTree"
 
 function Navigation() {
   const pathname = usePathname();

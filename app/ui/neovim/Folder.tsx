@@ -1,7 +1,7 @@
 import React from "react";
 import clsx from "clsx";
 import FolderOpen from "@/app/ui/icons/FolderOpen";
-import { LinkItem } from "@/app/ui/link_list";
+import { LinkItem } from "@/app/ui/linkList";
 
 interface FolderProps {
   link: LinkItem;
